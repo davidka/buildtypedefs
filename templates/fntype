@@ -1,0 +1,8 @@
+<<t $in.name>>
+(
+<<for param $in.params || []>>
+<<if $i>>, <</if>><<if param.rest>>...<</if>>
+<<t param.name>>: <<type param>>
+<</for>>
+)
+<<if $in.returns>>: <<type $in.returns>><</if>>;

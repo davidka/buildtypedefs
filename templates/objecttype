@@ -1,0 +1,7 @@
+{ 
+  <<for name, prop in $in.properties>>
+    <<if $i>>, <</if>>
+    <<t name>>
+    <<type prop>>
+  <</for>>
+}

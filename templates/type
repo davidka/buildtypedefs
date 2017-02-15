@@ -1,0 +1,14 @@
+<<if $in.type == "Function">>
+  <<fntype $in>>
+<<elif $in.type == "Array">>
+  [<<for elt $in.typeParams || []>><<if $i>>, <</if>><<type elt>><</for>>]
+<<elif $in.type == "union">>
+  <<for elt $in.typeParams>><<if $i>> | <</if>><<type elt>><</for>>
+<<elif $in.type == "Object">>
+  <<objecttype $in>>
+<<else>>
+  <<if $in.optional>>?<</if>>
+  <<t ": ">>
+  <<t $in.type>>
+  <<if $in.typeParams>>&lt;<<for elt $in.typeParams>><<if $i>>, <</if>><<type elt>><</for>>&gt;<</if>>
+<</if>>
