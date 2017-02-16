@@ -1,16 +1,21 @@
-var fs = require("fs")
-var builddocs = require("builddocs")
-var Mold = require("mold-template")
+const fs = require("fs")
+const builddocs = require("builddocs")
+const Mold = require("mold-template")
+const importsFor = require("./imports").importsFor
 
-exports.build = function(config, data) {
-  let mold = loadTemplates(config, data);
+exports.build = function(config, modules) {
+  let mold = loadTemplates(config, modules);
+  let moduleContents = Object.create(null)
 
-  Object.keys(data.items).forEach((key, index) => {
-    let item = data.items[key];
-    
-    let typeDef = mold.defs.item({ item: item, name: key });
-    console.log(typeDef);
-    fs.writeFileSync(config.outDir + config.name + ".d.ts", typeDef);
+  modules.forEach(module => moduleContents[module.name] = builddocs.read({
+    files: config.baseDir + module.name + config.srcDir + "*.js"
+  }));
+
+  Object.keys(moduleContents).forEach(function (moduleName) {
+    let imports = importsFor(moduleName, modules, moduleContents);
+    let typeDefs = mold.defs.module({ module: moduleContents[moduleName], name: moduleName, deps: imports });
+
+    fs.writeFileSync(config.outDir + moduleName + ".d.ts", typeDefs);
   });
 }
 
@@ -20,7 +25,6 @@ function loadTemplates(config, data) {
   fs.readdirSync(config.templateDir).forEach(function (filename) {
     mold.bake(filename, fs.readFileSync(config.templateDir + "/" + filename, "utf8").trim())
   });
-  
 
   return mold;
 }

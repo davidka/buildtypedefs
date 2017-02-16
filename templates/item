@@ -1,5 +1,7 @@
-<<if $in.item.type == "class" || $in.item.type == "interface">>
-  <<class $in>>
+<<in {item, name, items, imports}>>
+
+<<if item.type == "class" || item.type == "interface">>
+  <<class { item: item, name: name, items: items, imports: imports }>>
 <<else>>
-  <<define $in>>
+  <<define { item: item, name: name, items: items, imports: imports }>>
 <</if>>

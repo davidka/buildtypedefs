@@ -2,5 +2,9 @@
   "vsicons.presets.angular": false,
   "files.exclude": {
     "**/node_modules": false
+  },
+  "search.exclude": {
+    "**/node_modules": false,
+    "**/bower_components": true
   }
 }

@@ -1,7 +1,9 @@
-{ 
-  <<for name, prop in $in.properties>>
+<<in {item, items, imports}>>
+
+: { 
+  <<for name, prop in item.properties>>
     <<if $i>>, <</if>>
     <<t name>>
-    <<type prop>>
+    <<type  {item: prop, items: items, imports: imports}>>
   <</for>>
 }

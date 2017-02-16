@@ -1,14 +1,26 @@
-<<if $in.type == "Function">>
-  <<fntype $in>>
-<<elif $in.type == "Array">>
-  [<<for elt $in.typeParams || []>><<if $i>>, <</if>><<type elt>><</for>>]
-<<elif $in.type == "union">>
-  <<for elt $in.typeParams>><<if $i>> | <</if>><<type elt>><</for>>
-<<elif $in.type == "Object">>
-  <<objecttype $in>>
+<<in {item, skipOptional, skipColon, items, imports}>>
+
+<<if item.type == "Function">>
+  <<fntype {item: item, items: items, imports: imports}>>
+<<elif item.type == "Array">>
+  <<for elt item.typeParams || []>><<if $i>>, <</if>><<type {item: elt, items: items, imports: imports}>><</for>>[]
+<<elif item.type == "union">>
+  <<for elt item.typeParams>>
+    <<if $i>> | 
+    <</if>>
+    <<type {item: elt, items: items, skipColon: true, imports: imports}>>
+  <</for>>
+<<elif item.type == "Object">>
+  <<objecttype {item: item, items: items, imports: imports}>>
 <<else>>
-  <<if $in.optional>>?<</if>>
-  <<t ": ">>
-  <<t $in.type>>
-  <<if $in.typeParams>>&lt;<<for elt $in.typeParams>><<if $i>>, <</if>><<type elt>><</for>>&gt;<</if>>
+  <<import {type: item.type, items: items, imports: imports}>>
+  
+  <<if (!skipOptional && item.optional)>>?<</if>>
+  <<if !skipColon>><<t ": ">><</if>>
+  <<t item.type>>
+  <<if item.typeParams>>
+    <
+    <<for elt item.typeParams>><<if $i>>, <</if>><<type {item: elt, items: items, imports: imports}>><</for>>
+    >
+  <</if>>
 <</if>>

@@ -1,4 +1,4 @@
-<<in {item, name, static}>>
+<<in {item, name, static, items, imports}>>
 
 <<do item.name = name>>
 
@@ -9,20 +9,12 @@
   <<if /\.constructor$/.test(item.id)>>
     <<do item.name = "constructor">>
   <</if>>
-  <<fntype item>>
+  <<fntype {item: item, items: items, imports: imports}>>;
 <<else>>
-  <<t name>><<if item.type>><<type item>><</if>>;
+  <<t name>><<if item.type>><<type  {item: item, items: items, imports: imports}>><</if>>;
 <</if>>
 <<t "\n">>
 
 <<for name, prop in item.properties || {}>>
-  <<define {item: prop, name: name}>>
+  <<define {item: prop, name: name, items: items, imports: imports}>>
 <</for>>
-
-<<for param item.params || []>>
-  <<define {item: param, name: param.name}>>
-<</for>>
-
-<<if item.returns>>
-  <<define {item: item.returns, name: "returns"}>>
-<</if>>
