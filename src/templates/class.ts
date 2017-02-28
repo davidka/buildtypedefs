@@ -52,7 +52,7 @@ export default function (sb: StringBuilder, item: any, name: string, items: Obje
 
   sb.append("{ ")
 
-  if (item.constructor) {
+  if ("constructor" in item && !(item.constructor instanceof Function) {
     miscDef(sb, item.constructor, name, false, items, imports);
   }
 
