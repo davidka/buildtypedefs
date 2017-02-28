@@ -37,7 +37,7 @@ export default function (sb: StringBuilder, item: any, name: string, isStatic: b
         item.name = "constructor";
       }
 
-      functionDef(sb, item, items, imports);
+      functionDef(sb, item, items, imports, false);
     }
     else {
       sb.append(name)

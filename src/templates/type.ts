@@ -36,7 +36,7 @@ export default function (sb: StringBuilder, item: any, skipOptional: boolean, sk
 
   switch(item.type) {
     case "Function":
-      functionDef(sb, item, items, imports)
+      functionDef(sb, item, items, imports, false)
       break;
     case "Array":
       for (let i in item.typeParams) {
