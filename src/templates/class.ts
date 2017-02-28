@@ -40,33 +40,33 @@ export default function (sb: StringBuilder, item: any, name: string, items: Obje
         sb.append(",")
       }
 
-      typeDef(sb, item.typeParams[i], true, items, imports);
+      typeDef(sb, item.typeParams[i], false, true, items, imports);
     }
     sb.append(">")
   }
 
   if(item.extends) {
     sb.append(" extends ")
-    typeDef(sb, item.extends, true, items, imports);
+    typeDef(sb, item.extends, false, true, items, imports);
   }
 
   sb.append("{ ")
 
-  // if (item.constructor) {
-  //   miscDef(sb, item.constructor, name, false, items, imports);
-  // }
+  if (item.constructor) {
+    miscDef(sb, item.constructor, name, false, items, imports);
+  }
 
-  // if (item.properties) {
-  //   for (let prop in item.properties) {
-  //     miscDef(sb, item.properties[prop], name, false, items, imports);
-  //   }
-  // }
+  if (item.properties) {
+    for (let prop in item.properties) {
+      miscDef(sb, item.properties[prop], name, false, items, imports);
+    }
+  }
 
-  // if (item.staticProperties) {
-  //   for (let prop in item.staticProperties) {
-  //     miscDef(sb, item.staticProperties[prop], name, false, items, imports);
-  //   }
-  // }
+  if (item.staticProperties) {
+    for (let prop in item.staticProperties) {
+      miscDef(sb, item.staticProperties[prop], name, false, items, imports);
+    }
+  }
 
   sb.appendLine("}")
 }

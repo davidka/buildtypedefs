@@ -15,17 +15,19 @@ export default function(config, modules) {
   // let mold = loadTemplates(config, modules);
   let moduleContents = Object.create(null)
 
-  modules.forEach(module => moduleContents[module.name] = builddocs.read({
-    files: config.baseDir + module.name + config.srcDir + "*.js"
-  }));
+  for (let module of modules) {
+    moduleContents[module.name] = builddocs.read({
+      files: config.baseDir + module.name + config.srcDir + "*.js"
+    });
+  }
 
-  Object.keys(moduleContents).forEach(function (moduleName) {
-
+  for (let moduleName in moduleContents) {
     let imports = importsFor(moduleName, modules, moduleContents);
     moduleDef(sb, moduleContents[moduleName], moduleName, imports);
 
     fs.writeFileSync(config.outDir + moduleName + ".d.ts", sb.toString());
-  });
+  }
+
 }
 
 // function loadTemplates(config, data) {

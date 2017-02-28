@@ -26,23 +26,45 @@
 // <</if>>
 
 import StringBuilder = require('string-builder');
-// import StringBuilder = require('string-builder');
 import functionDef from "./function";
+import typeDef from "./type";
+import objectDef from "./object";
+import importDef from "./import";
 
 
+export default function (sb: StringBuilder, item: any, skipOptional: boolean, skipColon: boolean, items: Object, imports: Object) {
 
-export default function (sb: StringBuilder, item: any, skipColon: boolean, items: Object, imports: Object) {
   switch(item.type) {
     case "Function":
-      functionDef(sb, item, items, imports);
+      functionDef(sb, item, items, imports)
       break;
     case "Array":
+      for (let i in item.typeParams) {
+        if (i) sb.append(",")
+        typeDef(sb, item.typeParams[i], false, false, items, imports)
+      }
+      sb.append("[]");
       break;
     case "union":
+      for (let i in item.typeParams) {
+        if (i) sb.append("|")
+        typeDef(sb, item.typeParams[i], false, true, items, imports)
+      }
       break;
     case "Object":
+      objectDef(sb, item, items, imports)
       break;
     default:
+      importDef(sb, item.type, items, imports)
+      if(!skipOptional && item.optional) sb.append("?")
+      if (!skipColon) sb.append(": ")
+      sb.append(item.type)
+      if (item.typeParams) {
+        for (let i in item.typeParams) {
+          if (i) sb.append(",")
+          typeDef(sb, item.typeParams[i], false, false, items, imports)
+        }
+      }
       break;
 
   }

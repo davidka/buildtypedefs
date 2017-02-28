@@ -42,7 +42,7 @@ export default function (sb: StringBuilder, item: any, name: string, isStatic: b
     else {
       sb.append(name)
       if(item.type) {
-        typeDef(sb, item, false, items, imports);
+        typeDef(sb, item, false, false, items, imports);
       }
 
       sb.append(";")
