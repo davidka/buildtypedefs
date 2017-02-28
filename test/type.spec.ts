@@ -9,7 +9,7 @@ beforeEach(function () {
   sb = new StringBuilder();
 });
 
-describe.only('when adding type definition', () => {
+describe('when adding type definition', () => {
 
   it('should handle a function', () => {
     let item = { name: "Type1", type: "Function" };
