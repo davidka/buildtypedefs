@@ -1,6 +1,6 @@
-var buildtypedefs = require("./build")
-var builddocs = require("builddocs")
-var baseDir = __dirname + "/../node_modules/"
+import buildtypedefs from "./build";
+
+const baseDir = __dirname + "/../../node_modules/"
 
 var modules = [{
   name: "prosemirror-state",
@@ -39,7 +39,7 @@ var modules = [{
   deps: ["prosemirror-state"]
 }]
 
-buildtypedefs.build(
+buildtypedefs(
   {
     baseDir: baseDir,
     srcDir: "/src/",

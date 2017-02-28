@@ -13,10 +13,11 @@ let addImport = function(name, imports, moduleContents) {
   }
 }
 
-exports.importsFor = function(moduleName, modules, moduleContents) {
+export function importsFor(moduleName: string, modules: Array<any>, moduleContents: Object): Object {
+
   let mod = modules.find((module) => module.name == moduleName);
   let imports = Object.create(null)
-  let seen = Object.create(null), result = []
+  let seen = Object.create(null)
 
   function enter(name) {
     if (name in seen) return
@@ -41,3 +42,4 @@ exports.importsFor = function(moduleName, modules, moduleContents) {
 
   return imports;
 }
+
