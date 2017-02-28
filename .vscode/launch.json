@@ -31,7 +31,12 @@
         "--colors",
         "${workspaceRoot}/out/test"
       ],
-      "internalConsoleOptions": "openOnSessionStart"
+      "internalConsoleOptions": "openOnSessionStart",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceRoot}/out/src/**/*.js",
+        "${workspaceRoot}/out/test/**/*.js"
+      ]
     }
   ]
 }
