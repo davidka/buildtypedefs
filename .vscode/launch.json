@@ -8,11 +8,11 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceRoot}/build/dist/index.js",
+      "program": "${workspaceRoot}/out/src/index.js",
       "cwd": "${workspaceRoot}",
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceRoot}/build/dist/**/*.js"
+        "${workspaceRoot}/out/src/**/*.js"
       ]
     },
     {
