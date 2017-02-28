@@ -39,15 +39,12 @@ export default function (sb: StringBuilder, item: any, skipOptional: boolean, sk
       functionDef(sb, item, items, imports, false)
       break;
     case "Array":
-      for (let i in item.typeParams) {
-        if (i) sb.append(",")
-        typeDef(sb, item.typeParams[i], false, false, items, imports)
-      }
+      typeDef(sb, item.typeParams[0], false, false, items, imports)
       sb.append("[]");
       break;
     case "union":
       for (let i in item.typeParams) {
-        if (i) sb.append("|")
+        if (i != "0") sb.append(" | ")
         typeDef(sb, item.typeParams[i], false, true, items, imports)
       }
       break;
@@ -56,14 +53,26 @@ export default function (sb: StringBuilder, item: any, skipOptional: boolean, sk
       break;
     default:
       importDef(sb, item.type, items, imports)
+      
       if(!skipOptional && item.optional) sb.append("?")
       if (!skipColon) sb.append(": ")
-      sb.append(item.type)
+
+      switch(item.type) {
+        case "bool":
+          sb.append("boolean")
+          break
+        default:
+          sb.append(item.type)
+          break
+      }
+
       if (item.typeParams) {
+        sb.append("<")
         for (let i in item.typeParams) {
-          if (i) sb.append(",")
-          typeDef(sb, item.typeParams[i], false, false, items, imports)
+          if (i != "0") sb.append(", ")
+          typeDef(sb, item.typeParams[i], false, true, items, imports)
         }
+        sb.append(">")
       }
       break;
 
