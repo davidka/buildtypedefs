@@ -26,12 +26,14 @@
     "debug": "^2.6.1",
     "getdocs": "^0.5.0",
     "mold-template": "^2.0.1",
+    "sinon": "^1.17.7",
     "string-builder": "^0.1.4"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.39",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "^0.0.29",
+    "@types/sinon": "^1.16.35",
     "prosemirror-model": "^0.18.0",
     "prosemirror-state": "^0.18.0",
     "prosemirror-transform": "^0.18.0",

@@ -1,6 +1,9 @@
 
-import chai = require('chai');
-import chaiAsPromised = require('chai-as-promised');
+// import chai = require('chai');
+import * as chai from 'chai';
+// import chaiAsPromised = require('chai-as-promised');
+import * as chaiAsPromised from 'chai-as-promised';
+import * as sinon from 'sinon';
 
 global.before(function () {
   chai.should();
