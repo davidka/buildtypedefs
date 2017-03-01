@@ -10,7 +10,6 @@ import {importsFor} from "./imports"
 import moduleDef from "./templates/module";
 
 export default function(config, modules) {
-  let sb = new StringBuilder("");
 
   // let mold = loadTemplates(config, modules);
   let moduleContents = Object.create(null)
@@ -21,7 +20,13 @@ export default function(config, modules) {
     });
   }
 
+  // for (let moduleName in moduleContents) {
+  //   fs.writeFileSync(config.outDir + "getdocs/" + moduleName + ".json", JSON.stringify(moduleContents[moduleName], null, 2));
+  // }
+
   for (let moduleName in moduleContents) {
+    let sb = new StringBuilder("");
+
     let imports = importsFor(moduleName, modules, moduleContents);
     moduleDef(sb, moduleContents[moduleName], moduleName, imports);
 

@@ -44,7 +44,7 @@ buildtypedefs(
     baseDir: baseDir,
     srcDir: "/src/",
     templateDir: './templates',
-    outDir: './out/'
+    outDir: './out/typings/'
   },
   modules
 );
