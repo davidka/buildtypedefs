@@ -31,28 +31,31 @@ export default function (sb: StringBuilder, item: any, name: string, isStatic: b
   sb.appendLine("");
 
   if(item.type == "Function") {
+    sb.append("export function ")
+    
     if (isStatic) {
       sb.append(" static ")
-      if (/\.constructor$/.test(item.id)) {
-        item.name = "constructor";
-      }
-
-      functionDef(sb, item, items, imports, false);
-    }
-    else {
-      sb.append(name)
-      if(item.type) {
-        typeDef(sb, item, false, false, items, imports);
-      }
-
-      sb.append(";")
     }
 
-    sb.appendLine("");
-
-    for(let prop in item.properties) {
-      miscDef(sb, item.properties[prop], prop, false, items, imports)
+    if (/\.constructor$/.test(item.id)) {
+      item.name = "constructor";
     }
-
+    functionDef(sb, item, items, imports, false);
+    
   }
+  else {
+    sb.append(name)
+    if(item.type) {
+      typeDef(sb, item, false, false, items, imports);
+    }
+
+    sb.append(";")
+  }
+
+  sb.appendLine("");
+
+  for(let prop in item.properties) {
+    miscDef(sb, item.properties[prop], prop, false, items, imports)
+  }
+
 }
