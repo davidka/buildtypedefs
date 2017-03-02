@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/davidka/buildtypedefs#readme",
   "dependencies": {
-    "@types/debug": "0.0.29",
     "builddocs": "^0.1.3",
     "debug": "^2.6.1",
     "getdocs": "^0.5.0",
@@ -34,6 +33,8 @@
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "^0.0.29",
     "@types/sinon": "^1.16.35",
+	"@types/debug": "0.0.29",
+    "@types/node": "^7.0.5",
     "prosemirror-model": "^0.18.0",
     "prosemirror-state": "^0.18.0",
     "prosemirror-transform": "^0.18.0",
