@@ -25,7 +25,7 @@ import typeDef from "./type";
 import functionDef from "./function";
 import miscDef from "./misc";
 
-export default function (sb: StringBuilder, item: any, name: string, isStatic: boolean, isInlineProp: boolean, items: Object, imports: Object) {
+export default function (sb: StringBuilder, item: any, name: string, isStatic: boolean, isInlineProp: boolean, items: Object, imports: Array<string>, processItemProperties: boolean = true) {
   item.name = name;
 
   if (isStatic) {
@@ -51,8 +51,10 @@ export default function (sb: StringBuilder, item: any, name: string, isStatic: b
 
   sb.appendLine("");
 
-  for(let prop in item.properties) {
-    miscDef(sb, item.properties[prop], prop, false, true, items, imports)
+  if(processItemProperties) {
+    for (let prop in item.properties) {
+      miscDef(sb, item.properties[prop], prop, false, true, items, imports)
+    }
   }
 
 }

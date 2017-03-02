@@ -32,18 +32,16 @@ import objectDef from "./object";
 import importDef from "./import";
 
 
-export default function (sb: StringBuilder, item: any, skipOptional: boolean, skipColon: boolean, isParam: boolean, items: Object, imports: Object) {
+export default function (sb: StringBuilder, item: any, skipOptional: boolean, skipColon: boolean, isParam: boolean, items: Object, imports: Array<string>, useDummyName: boolean = true) {
 
   switch(item.type) {
     case "Function":
-      functionDef(sb, item, items, imports, isParam)
+      functionDef(sb, item, items, imports, isParam, useDummyName)
       break;
     case "Array":
       if (!skipOptional && item.optional) sb.append("?")
-      // if (!skipColon) sb.append(": ")
       if (item.typeParams[0].type == "Function") {
-        sb.append("(")
-        // typeDef(sb, item.typeParams[0], false, false, true, items, imports)
+        sb.append(": (")
         functionDef(sb, item.typeParams[0], items, imports, true, false);
         sb.append(")")
       } else {
@@ -58,14 +56,21 @@ export default function (sb: StringBuilder, item: any, skipOptional: boolean, sk
       }
       for (let i in item.typeParams) {
         if (i != "0") sb.append(" | ")
-        typeDef(sb, item.typeParams[i], false, true, true, items, imports)
+        if (item.typeParams[i].type == "Function") {
+          sb.append("(")
+          typeDef(sb, item.typeParams[i], false, true, true, items, imports, false)
+          sb.append(")")
+        } else {
+          typeDef(sb, item.typeParams[i], false, true, true, items, imports)
+        }
+  
       }
       break;
     case "Object":
       objectDef(sb, item, skipColon, items, imports)
       break;
     default:
-      importDef(sb, item.type, items, imports)
+      importDef(item.type, items, imports)
       
       if(!skipOptional && item.optional) sb.append("?")
       if (!skipColon) sb.append(": ")

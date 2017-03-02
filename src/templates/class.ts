@@ -30,19 +30,19 @@ import StringBuilder = require('string-builder');
 import typeDef from "./type";
 import miscDef from "./misc";
 
-export default function (sb: StringBuilder, item: any, name: string, items: Object, imports: Object) {
-  sb.append("class " + name + " ")
+export default function (sb: StringBuilder, item: any, name: string, items: Object, imports: Array<string>) {
+  sb.append(item.type + " " + name + " ")
 
   if (item.typeParams) {
     sb.append("<")
     for(let i in item.typeParams) {
-      if (i){
-        sb.append(",")
+      if (i != "0"){
+        sb.append(", ")
       }
 
       typeDef(sb, item.typeParams[i], false, true, true, items, imports);
     }
-    sb.append(">")
+    sb.append("> ")
   }
 
   if(item.extends) {

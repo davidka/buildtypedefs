@@ -41,6 +41,18 @@ describe('when adding type definition', () => {
     sb.toString().should.equal("Node[]")
   });
 
+  it('should handle an union with one number param and one function', () => {
+    let item = { type: "union", typeParams: [{ type: "number" }, { type: "Function", params: [{type: "string"}] }] };
+    typeDef(sb, item, false, true, false, {}, {});
+    sb.toString().should.equal("number | ((p: string) => void)")
+  });
+
+  it('should handle an union with one number param and one function with two params', () => {
+    let item = { type: "union", typeParams: [{ type: "number" }, { type: "Function", params: [{ type: "string" }, { type: "string" }] }] };
+    typeDef(sb, item, false, true, false, {}, {});
+    sb.toString().should.equal("number | ((p1: string, p2: string) => void)")
+  });
+
   it('should handle an object', () => {
     let item = { type: "Object"};
     typeDef(sb, item, false, false, false, {}, {});

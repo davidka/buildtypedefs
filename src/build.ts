@@ -25,22 +25,10 @@ export default function(config, modules) {
   // }
 
   for (let moduleName in moduleContents) {
-    let sb = new StringBuilder("");
-
     let imports = importsFor(moduleName, modules, moduleContents);
-    moduleDef(sb, moduleContents[moduleName], moduleName, imports);
+    let sb = moduleDef(moduleContents[moduleName], moduleName, imports);
 
     fs.writeFileSync(config.outDir + moduleName + ".d.ts", sb.toString());
   }
 
 }
-
-// function loadTemplates(config, data) {
-//   let mold = new Mold();
-
-//   fs.readdirSync(config.templateDir).forEach(function (filename) {
-//     mold.bake(filename, fs.readFileSync(config.templateDir + "/" + filename, "utf8").trim())
-//   });
-
-//   return mold;
-// }

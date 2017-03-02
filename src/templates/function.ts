@@ -29,7 +29,7 @@ import StringBuilder = require('string-builder');
 import functionDef from "./function";
 import typeDef from "./type";
 
-export default function (sb: StringBuilder, item: any, items: Object, imports: Object, isParam: boolean, useDummyName: boolean = true) {
+export default function (sb: StringBuilder, item: any, items: Object, imports: Array<string>, isParam: boolean, useDummyName: boolean = true) {
   if(item.name) sb.append(item.name)
   else if(isParam && useDummyName) sb.append("fn")
 
@@ -38,16 +38,22 @@ export default function (sb: StringBuilder, item: any, items: Object, imports: O
   if ((isParam && useDummyName) || /\^returns$/.test(item.id)) sb.append(": ")
   sb.append("(")
 
+  let dummyNameCounter = 0;
   for(let i in item.params) {
     let param = item.params[i];
     if(i != "0") sb.append(", ")
-    if(param.rest) sb.append("...")
+    if(param.rest) {
+      sb.append("...")
+    }
 
     if(param.type == "Function") {
       functionDef(sb, param, items, imports, true);
     } else {
       if (param.name) sb.append(param.name)
-      else sb.append("p")
+      else {
+        sb.append("p")
+        if(item.params.length > 1) sb.append((++dummyNameCounter).toString())
+      }
       typeDef(sb, param, false, false, true, items, imports)
     }
   }

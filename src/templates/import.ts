@@ -8,6 +8,10 @@
 
 import StringBuilder = require('string-builder');
 
-export default function (sb: StringBuilder, type: any, items: Object, imports: Object) {
+let knownTypes = ["string", "bool", "number", "any", "T"]
 
+export default function (type: any, items: Object, imports: Array<string>) {
+  if (knownTypes.indexOf(type) == -1 && imports.indexOf(type) == - 1 && !items[type]) {
+    imports.push(type);
+  }
 }

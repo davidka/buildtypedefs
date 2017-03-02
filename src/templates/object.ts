@@ -11,7 +11,7 @@
 import StringBuilder = require('string-builder');
 import typeDef from "./type";
 
-export default function (sb: StringBuilder, item: any, skipColon: boolean, items: Object, imports: Object) {
+export default function (sb: StringBuilder, item: any, skipColon: boolean, items: Object, imports: Array<string>) {
   if(!skipColon) sb.append(": ")
   if(item.properties){
     sb.append("{")

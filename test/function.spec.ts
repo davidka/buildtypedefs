@@ -59,6 +59,12 @@ describe('should add function definition', () => {
       sb.toString().should.equal("Func(...param1: boolean): void")
     });
 
+    it('array with function parameter', () => {
+      let item = { name: "Func", params: [{ type: "Array", name: "param1", typeParams: [{type: "Function", name: "Func1"}] }] };
+      functionDef(sb, item, {}, {}, false);
+      sb.toString().should.equal("Func(param1: (Func1() => void)[]): void")
+    });
+
     it('function parameter', () => {
       let item = { name: "Func", params: [{ type: "Function", name: "param1" }] };
       functionDef(sb, item, {}, {}, false);
