@@ -17,7 +17,7 @@ export default function (sb: StringBuilder, item: any, name: string, items: Obje
   if(item.type == "class" || item.type == "interface") {
     classDef(sb, item, name, items, imports)
   } else {
-    miscDef(sb, item, name, false, items, imports)
+    miscDef(sb, item, name, false, false, items, imports)
   }
 
 }

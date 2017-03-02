@@ -31,7 +31,7 @@ import typeDef from "./type";
 import miscDef from "./misc";
 
 export default function (sb: StringBuilder, item: any, name: string, items: Object, imports: Object) {
-  sb.append("export class " + name + " ")
+  sb.append("class " + name + " ")
 
   if (item.typeParams) {
     sb.append("<")
@@ -40,33 +40,35 @@ export default function (sb: StringBuilder, item: any, name: string, items: Obje
         sb.append(",")
       }
 
-      typeDef(sb, item.typeParams[i], false, true, items, imports);
+      typeDef(sb, item.typeParams[i], false, true, true, items, imports);
     }
     sb.append(">")
   }
 
   if(item.extends) {
     sb.append(" extends ")
-    typeDef(sb, item.extends, false, true, items, imports);
+    typeDef(sb, item.extends, false, true, false, items, imports);
   }
 
   sb.append("{ ")
+  sb.appendLine("")
 
   if ("constructor" in item && !(item.constructor instanceof Function)) {
-    miscDef(sb, item.constructor, name, false, items, imports);
+    miscDef(sb, item.constructor, name, false, false, items, imports);
   }
 
   if (item.properties) {
     for (let prop in item.properties) {
-      miscDef(sb, item.properties[prop], name, false, items, imports);
+      miscDef(sb, item.properties[prop], prop, false, true,  items, imports);
     }
   }
 
   if (item.staticProperties) {
     for (let prop in item.staticProperties) {
-      miscDef(sb, item.staticProperties[prop], name, false, items, imports);
+      miscDef(sb, item.staticProperties[prop], prop, true, true,  items, imports);
     }
   }
 
   sb.appendLine("}")
+  sb.appendLine("")
 }

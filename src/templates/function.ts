@@ -29,9 +29,13 @@ import StringBuilder = require('string-builder');
 import functionDef from "./function";
 import typeDef from "./type";
 
-export default function (sb: StringBuilder, item: any, items: Object, imports: Object, isParam: boolean) {
+export default function (sb: StringBuilder, item: any, items: Object, imports: Object, isParam: boolean, useDummyName: boolean = true) {
   if(item.name) sb.append(item.name)
-  if (isParam) sb.append(": ")
+  else if(isParam && useDummyName) sb.append("fn")
+
+  if(item.optional) sb.append("?")
+
+  if ((isParam && useDummyName) || /\^returns$/.test(item.id)) sb.append(": ")
   sb.append("(")
 
   for(let i in item.params) {
@@ -43,16 +47,22 @@ export default function (sb: StringBuilder, item: any, items: Object, imports: O
       functionDef(sb, param, items, imports, true);
     } else {
       if (param.name) sb.append(param.name)
-      typeDef(sb, param, false, false, items, imports)
+      else sb.append("p")
+      typeDef(sb, param, false, false, true, items, imports)
     }
   }
 
   sb.append(")")
 
   if(item.returns) {
-    if(isParam) sb.append(" => ")
-    typeDef(sb, item.returns, true, false, items, imports)
-  } else {
+    if (isParam || /\^returns\^returns$/.test(item.returns.id)) {
+      sb.append(" => ")
+      typeDef(sb, item.returns, true, true, true, items, imports)
+    } else {
+      typeDef(sb, item.returns, true, false, false, items, imports)
+    }
+    
+  } else if (item.name != "constructor") {
     if (isParam) sb.append(" => ")
     else sb.append(": ")
     sb.append("void")

@@ -19,10 +19,10 @@ describe('should add function definition', () => {
       sb.toString().should.equal("Func(): void")
     });
 
-    it.skip('=> void', () => {
+    it('=> void', () => {
       let item = { name: "Func" };
-      functionDef(sb, item, {}, {}, true);
-      sb.toString().should.equal("Func() => void")
+      functionDef(sb, item, {}, {}, false, true);
+      sb.toString().should.equal("Func(): void")
     });
 
   });
@@ -35,10 +35,22 @@ describe('should add function definition', () => {
       sb.toString().should.equal("Func(param1: boolean): void")
     });
 
+    it('one optional named parameter', () => {
+      let item = { name: "Func", params: [{ type: "bool", name: "param1", optional: true }] };
+      functionDef(sb, item, {}, {}, false);
+      sb.toString().should.equal("Func(param1?: boolean): void")
+    });
+
     it('two named parameters', () => {
       let item = { name: "Func", params: [{ type: "bool", name: "param1" }, { type: "Object", name: "param2" }] };
       functionDef(sb, item, {}, {}, false);
       sb.toString().should.equal("Func(param1: boolean, param2: Object): void")
+    });
+
+    it('two optional named parameters', () => {
+      let item = { name: "Func", params: [{ type: "bool", name: "param1", optional: true }, { type: "number", name: "param2", optional: true }] };
+      functionDef(sb, item, {}, {}, false);
+      sb.toString().should.equal("Func(param1?: boolean, param2?: number): void")
     });
 
     it('rest parameter', () => {
@@ -51,6 +63,12 @@ describe('should add function definition', () => {
       let item = { name: "Func", params: [{ type: "Function", name: "param1" }] };
       functionDef(sb, item, {}, {}, false);
       sb.toString().should.equal("Func(param1: () => void): void")
+    });
+
+    it('optional function parameter', () => {
+      let item = { name: "Func", params: [{ type: "Function", name: "param1", optional: true }] };
+      functionDef(sb, item, {}, {}, false);
+      sb.toString().should.equal("Func(param1?: () => void): void")
     });
 
   });

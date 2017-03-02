@@ -31,6 +31,7 @@ export default function (sb: StringBuilder, module: any, name: string, imports: 
   sb.appendLine("");
 
   for (let item in module.items) {
+    sb.append("export ")
     itemDef(sb, module.items[item], item, module.items, imports);
   }
 

@@ -32,24 +32,37 @@ import objectDef from "./object";
 import importDef from "./import";
 
 
-export default function (sb: StringBuilder, item: any, skipOptional: boolean, skipColon: boolean, items: Object, imports: Object) {
+export default function (sb: StringBuilder, item: any, skipOptional: boolean, skipColon: boolean, isParam: boolean, items: Object, imports: Object) {
 
   switch(item.type) {
     case "Function":
-      functionDef(sb, item, items, imports, false)
+      functionDef(sb, item, items, imports, isParam)
       break;
     case "Array":
-      typeDef(sb, item.typeParams[0], false, false, items, imports)
+      if (!skipOptional && item.optional) sb.append("?")
+      // if (!skipColon) sb.append(": ")
+      if (item.typeParams[0].type == "Function") {
+        sb.append("(")
+        // typeDef(sb, item.typeParams[0], false, false, true, items, imports)
+        functionDef(sb, item.typeParams[0], items, imports, true, false);
+        sb.append(")")
+      } else {
+        typeDef(sb, item.typeParams[0], false, skipColon, false, items, imports)
+      }
       sb.append("[]");
       break;
     case "union":
+      if (!skipOptional && item.optional) sb.append("?")
+      if (isParam || /\^returns$/.test(item.id) || !skipColon){
+        sb.append(": ")
+      }
       for (let i in item.typeParams) {
         if (i != "0") sb.append(" | ")
-        typeDef(sb, item.typeParams[i], false, true, items, imports)
+        typeDef(sb, item.typeParams[i], false, true, true, items, imports)
       }
       break;
     case "Object":
-      objectDef(sb, item, items, imports)
+      objectDef(sb, item, skipColon, items, imports)
       break;
     default:
       importDef(sb, item.type, items, imports)
@@ -70,7 +83,7 @@ export default function (sb: StringBuilder, item: any, skipOptional: boolean, sk
         sb.append("<")
         for (let i in item.typeParams) {
           if (i != "0") sb.append(", ")
-          typeDef(sb, item.typeParams[i], false, true, items, imports)
+          typeDef(sb, item.typeParams[i], false, true, true, items, imports)
         }
         sb.append(">")
       }

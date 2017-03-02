@@ -11,8 +11,8 @@
 import StringBuilder = require('string-builder');
 import typeDef from "./type";
 
-export default function (sb: StringBuilder, item: any, items: Object, imports: Object) {
-  sb.append(": ")
+export default function (sb: StringBuilder, item: any, skipColon: boolean, items: Object, imports: Object) {
+  if(!skipColon) sb.append(": ")
   if(item.properties){
     sb.append("{")
     
@@ -21,7 +21,7 @@ export default function (sb: StringBuilder, item: any, items: Object, imports: O
       if (!first) sb.append(", ")
       first = false;
       sb.append(name)
-      typeDef(sb, item.properties[name], false, false, items, imports)
+      typeDef(sb, item.properties[name], false, false, false, items, imports)
     }
     sb.append("}")
   } else {
