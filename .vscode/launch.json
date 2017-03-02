@@ -18,7 +18,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Unit Tests",
+      "name": "Debug Tests",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/mocha",
       "windows": {
         "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/mocha.cmd"
