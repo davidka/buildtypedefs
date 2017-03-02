@@ -1,13 +1,3 @@
-// <<in { item, name, items, imports } >>
-
-// <<if item.type == "class" || item.type == "interface" >>
-//   <<class { item: item, name: name, items: items, imports: imports } >>
-// <<else>>
-//   <<define { item: item, name: name, items: items, imports: imports }>>
-// <</if>>
-
-
-
 import StringBuilder = require('string-builder');
 import classDef from "./class";
 import miscDef from "./misc";

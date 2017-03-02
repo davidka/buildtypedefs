@@ -1,13 +1,3 @@
-// <<in {item, items, imports}>>
-
-// : { 
-//   <<for name, prop in item.properties>>
-//     <<if $i>>, <</if>>
-//     <<t name>>
-//     <<type  {item: prop, items: items, imports: imports}>>
-//   <</for>>
-// }
-
 import StringBuilder = require('string-builder');
 import typeDef from "./type";
 
