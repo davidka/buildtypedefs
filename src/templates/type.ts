@@ -44,7 +44,7 @@ export default function (sb: StringBuilder, item: any, skipOptional: boolean, sk
       objectDef(sb, item, skipColon, items, imports, additionalTypes)
       break;
     default:
-      importDef(item.type, items, imports)
+      importDef(item.type, items, imports, additionalTypes)
       
       if(!skipOptional && item.optional) sb.append("?")
       if (!skipColon) sb.append(": ")
@@ -54,7 +54,7 @@ export default function (sb: StringBuilder, item: any, skipOptional: boolean, sk
           sb.append("boolean")
           break
         default:
-          if(item.type.startsWith("dom.")) sb.append(item.type.replace("dom.", "DOM"))
+          if (additionalTypes[item.type]) sb.append(additionalTypes[item.type].replacement)
           else sb.append(item.type)
           
           break

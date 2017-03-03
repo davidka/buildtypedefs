@@ -35,13 +35,25 @@ let modules = [{
   name: "prosemirror-schema-list",
   deps: ["prosemirror-state"]
 }, {
+  name: "prosemirror-menu",
+  deps: ["prosemirror-view"]
+}, {
   name: "prosemirror-schema-table",
   deps: ["prosemirror-state"]
 }]
 
-let additionalTypes = [
-  {type: "dom.Node", replace: "DOMNode"}
-]
+let additionalTypes = {
+  "dom.Node": { replacement: "DOMNode", source: "./dom"},
+  "dom.Event": { replacement: "DOMEvent", source: "./dom"},
+  "dom.Element": { replacement: "DOMElement", source: "./dom"},
+  "dom.Document": { replacement: "DOMDocument", source: "./dom"},
+  "dom.DocumentFragment": { replacement: "DOMDocumentFragment", source: "./dom"},
+  "dom.KeyboardEvent": { replacement: "DOMKeyboardEvent", source: "./dom"},
+  "dom.MouseEvent": { replacement: "DOMMouseEvent", source: "./dom"},
+  "dom.MutationRecord": { replacement: "DOMMutationRecord", source: "./dom"},
+  "OrderedMap": { replacement: "OrderedMap", source: "orderedmap"},
+  "Error": { replacement: "DOMError", source: "./dom"},
+};
 
 
 buildtypedefs(
