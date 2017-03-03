@@ -1,7 +1,7 @@
 import StringBuilder = require('string-builder');
 import itemDef from "./item";
 
-export default function (module: any, name: string, deps: Object): StringBuilder {
+export default function (module: any, name: string, deps: Object, additionalTypes: Object): StringBuilder {
 
   let sb = new StringBuilder("");
   let imports = [];
@@ -10,7 +10,7 @@ export default function (module: any, name: string, deps: Object): StringBuilder
 
   for (let item in module.items) {
     sb.append("export ")
-    itemDef(sb, module.items[item], item, module.items, imports);
+    itemDef(sb, module.items[item], item, module.items, imports, additionalTypes);
   }
 
   sb.appendLine("}");

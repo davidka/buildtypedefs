@@ -15,13 +15,13 @@ describe('should add function definition', () => {
 
     it('void', () => {
       let item = {name: "Func"};
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(): void")
     });
 
     it('=> void', () => {
       let item = { name: "Func" };
-      functionDef(sb, item, {}, {}, false, true);
+      functionDef(sb, item, {}, [], false, true);
       sb.toString().should.equal("Func(): void")
     });
 
@@ -31,49 +31,49 @@ describe('should add function definition', () => {
 
     it('one named parameter', () => {
       let item = { name: "Func", params: [{type: "bool", name: "param1"}] };
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1: boolean): void")
     });
 
     it('one optional named parameter', () => {
       let item = { name: "Func", params: [{ type: "bool", name: "param1", optional: true }] };
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1?: boolean): void")
     });
 
     it('two named parameters', () => {
       let item = { name: "Func", params: [{ type: "bool", name: "param1" }, { type: "Object", name: "param2" }] };
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1: boolean, param2: Object): void")
     });
 
     it('two optional named parameters', () => {
       let item = { name: "Func", params: [{ type: "bool", name: "param1", optional: true }, { type: "number", name: "param2", optional: true }] };
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1?: boolean, param2?: number): void")
     });
 
     it('rest parameter', () => {
       let item = { name: "Func", params: [{ type: "bool", name: "param1", rest: true }] };
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(...param1: boolean): void")
     });
 
     it('array with function parameter', () => {
       let item = { name: "Func", params: [{ type: "Array", name: "param1", typeParams: [{type: "Function", name: "Func1"}] }] };
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1: (Func1() => void)[]): void")
     });
 
     it('function parameter', () => {
       let item = { name: "Func", params: [{ type: "Function", name: "param1" }] };
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1: () => void): void")
     });
 
     it('optional function parameter', () => {
       let item = { name: "Func", params: [{ type: "Function", name: "param1", optional: true }] };
-      functionDef(sb, item, {}, {}, false);
+      functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1?: () => void): void")
     });
 

@@ -7,7 +7,7 @@ import StringBuilder = require('string-builder');
 import {importsFor} from "./imports"
 import moduleDef from "./templates/module";
 
-export default function(config, modules) {
+export default function (config, modules, additionalTypes) {
 
   // let mold = loadTemplates(config, modules);
   let moduleContents = Object.create(null)
@@ -20,7 +20,7 @@ export default function(config, modules) {
 
   for (let moduleName in moduleContents) {
     let imports = importsFor(moduleName, modules, moduleContents);
-    let sb = moduleDef(moduleContents[moduleName], moduleName, imports);
+    let sb = moduleDef(moduleContents[moduleName], moduleName, imports, additionalTypes);
 
     fs.writeFileSync(config.outDir + moduleName + ".d.ts", sb.toString());
   }

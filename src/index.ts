@@ -2,7 +2,7 @@ import buildtypedefs from "./build";
 
 const baseDir = __dirname + "/../../node_modules/"
 
-var modules = [{
+let modules = [{
   name: "prosemirror-state",
   deps: ["prosemirror-model", "prosemirror-transform", "prosemirror-view"]
 }, {
@@ -39,6 +39,11 @@ var modules = [{
   deps: ["prosemirror-state"]
 }]
 
+let additionalTypes = [
+  {type: "dom.Node", replace: "DOMNode"}
+]
+
+
 buildtypedefs(
   {
     baseDir: baseDir,
@@ -46,6 +51,7 @@ buildtypedefs(
     templateDir: './templates',
     outDir: './out/typings/'
   },
-  modules
+  modules,
+  additionalTypes
 );
 
