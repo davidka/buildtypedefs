@@ -19,4 +19,11 @@ describe('when adding module definition', () => {
     sb.toString().should.equal(cr + cr + 'declare module "module1" {' + cr + 'export class Class1 { ' + cr + cr + '}' + cr + cr + '}')
   });
 
+  it('should replace additional type', () => {
+    let module = { items: { Node: { type: "class"}} };
+    let additionalTypes = {"Node": { replacement: "ProsemirrorNode", source: "prosemirror-model"}};
+    let sb = moduleDef(module, "module1", {}, additionalTypes);
+    sb.toString().should.equal(cr + cr + 'declare module "module1" {' + cr + 'export class Class1 { ' + cr + cr + '}' + cr + cr + '}')
+  });
+
 });

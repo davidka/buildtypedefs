@@ -4,6 +4,10 @@ import miscDef from "./misc";
 
 export default function (sb: StringBuilder, item: any, name: string, items: Object, imports: Array<string>, additionalTypes: Object) {
 
+  if(additionalTypes[name]) {
+    name = additionalTypes[name].replacement;
+  }
+
   if(item.type == "class" || item.type == "interface") {
     classDef(sb, item, name, items, imports, additionalTypes)
   } else {

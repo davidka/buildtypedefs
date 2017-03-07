@@ -34,6 +34,7 @@ export default function (sb: StringBuilder, item: any, items: Object, imports: A
   sb.append(")")
 
   if(item.returns) {
+    item.returns.isReturn = true;
     if (isParam || /\^returns\^returns$/.test(item.returns.id)) {
       sb.append(" => ")
       typeDef(sb, item.returns, true, true, true, items, imports, additionalTypes)

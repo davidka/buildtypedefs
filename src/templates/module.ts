@@ -17,6 +17,11 @@ export default function (module: any, name: string, deps: Object, additionalType
 
   let importSb = new StringBuilder("");
   for(let imp of imports) {
+
+    if(additionalTypes[imp]) {
+      imp = additionalTypes[imp].replacement
+    }
+
     let found = false;
     for(let dep in deps) {
       if (deps[dep].indexOf(imp) > -1) {
@@ -27,7 +32,7 @@ export default function (module: any, name: string, deps: Object, additionalType
 
     if(!found) {
       let result = (<any>Object).values(additionalTypes).filter((o) => o.replacement == imp);
-      if(result && result.length == 1) {
+      if (result && result.length == 1 && result[0].source) {
         importSb.appendLine("import {" + result[0].replacement + "} from '" + result[0].source +  "'")
       } else{
         console.log(imp + " not found for " + name)

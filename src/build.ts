@@ -19,7 +19,7 @@ export default function (config, modules, additionalTypes) {
   }
 
   for (let moduleName in moduleContents) {
-    let imports = importsFor(moduleName, modules, moduleContents);
+    let imports = importsFor(moduleName, modules, moduleContents, additionalTypes);
     let sb = moduleDef(moduleContents[moduleName], moduleName, imports, additionalTypes);
 
     fs.writeFileSync(config.outDir + moduleName + ".d.ts", sb.toString());

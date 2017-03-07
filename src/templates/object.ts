@@ -2,6 +2,8 @@ import StringBuilder = require('string-builder');
 import typeDef from "./type";
 
 export default function (sb: StringBuilder, item: any, skipColon: boolean, items: Object, imports: Array<string>, additionalTypes: Object) {
+
+  if (item.optional && !item.isReturn) sb.append("?")
   if(!skipColon) sb.append(": ")
   if(item.properties){
     sb.append("{")
@@ -17,5 +19,7 @@ export default function (sb: StringBuilder, item: any, skipColon: boolean, items
   } else {
     sb.append("Object")
   }
+
+  if (item.optional && item.isReturn) sb.append(" | void")
   
 }

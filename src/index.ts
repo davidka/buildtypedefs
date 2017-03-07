@@ -43,16 +43,16 @@ let modules = [{
 }]
 
 let additionalTypes = {
-  "dom.Node": { replacement: "DOMNode", source: "./dom"},
-  "dom.Event": { replacement: "DOMEvent", source: "./dom"},
-  "dom.Element": { replacement: "DOMElement", source: "./dom"},
-  "dom.Document": { replacement: "DOMDocument", source: "./dom"},
-  "dom.DocumentFragment": { replacement: "DOMDocumentFragment", source: "./dom"},
-  "dom.KeyboardEvent": { replacement: "DOMKeyboardEvent", source: "./dom"},
-  "dom.MouseEvent": { replacement: "DOMMouseEvent", source: "./dom"},
-  "dom.MutationRecord": { replacement: "DOMMutationRecord", source: "./dom"},
-  "OrderedMap": { replacement: "OrderedMap", source: "orderedmap"},
-  "Error": { replacement: "DOMError", source: "./dom"},
+  "dom.Node": { replacement: "Node"},
+  "Node": { replacement: "ProsemirrorNode", source: "prosemirror-model"},
+  "dom.Event": { replacement: "Event"},
+  "dom.Element": { replacement: "Element"},
+  "dom.Document": { replacement: "Document"},
+  "dom.DocumentFragment": { replacement: "DocumentFragment"},
+  "dom.KeyboardEvent": { replacement: "KeyboardEvent"},
+  "dom.MouseEvent": { replacement: "MouseEvent"},
+  "dom.MutationRecord": { replacement: "MutationRecord"},
+  "OrderedMap": { replacement: "OrderedMap", source: "orderedmap"}
 };
 
 

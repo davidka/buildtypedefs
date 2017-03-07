@@ -1,19 +1,24 @@
 
-let addImport = function(name, imports, moduleContents) {
+let addImport = function (name, imports, moduleContents, additionalTypes: Object) {
   if (!imports[name]) {
     imports[name] = []
     for (let propName in moduleContents[name].all) {
       let prop = moduleContents[name].all[propName];
 
       if (prop.type == "class" ||  prop.type == "interface")  {
-        imports[name].push(propName);
+        if (additionalTypes[propName]) {
+          imports[name].push(additionalTypes[propName].replacement);
+        } else {
+          imports[name].push(propName);
+        }
+        
       }
 
     }
   }
 }
 
-export function importsFor(moduleName: string, modules: Array<any>, moduleContents: Object): Object {
+export function importsFor(moduleName: string, modules: Array<any>, moduleContents: Object, additionalTypes: Object): Object {
 
   let mod = modules.find((module) => module.name == moduleName);
   let imports = Object.create(null)
@@ -34,7 +39,7 @@ export function importsFor(moduleName: string, modules: Array<any>, moduleConten
       mod.deps.forEach(enter)
     }
 
-    addImport(name, imports, moduleContents)
+    addImport(name, imports, moduleContents, additionalTypes)
   }
   if (mod.deps) {
     mod.deps.forEach(enter)
