@@ -1,24 +1,13 @@
 {
   "compilerOptions": {
-    // "outDir": "build/dist",
     "module": "commonjs",
     "target": "es6",
     "sourceMap": true,
     "outDir": "out",
-    // "allowJs": false,
-    // "moduleResolution": "node",
-    // "rootDir": "src",
-    // "forceConsistentCasingInFileNames": true,
-    // "noImplicitReturns": true,
-    // "noImplicitThis": true,
-    // "noImplicitAny": false,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": false
-    // "typeRoots": [
-    //   "./@types",
-    //   "./node_modules/@types"
-    // ]
+    "noUnusedLocals": false,
+    "declaration": true
   },
   "include": [
     "src/**/*.ts",
