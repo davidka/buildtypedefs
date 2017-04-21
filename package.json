@@ -14,7 +14,7 @@
     "TypeScript",
     "getdocs"
   ],
-  "author": "David Hahn",
+  "author": "David Hahn <davidka.h@gmal.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/davidka/buildtypedefs/issues"
