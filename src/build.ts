@@ -1,6 +1,7 @@
 const fs = require("fs")
 const builddocs = require("builddocs")
 var debug = require('debug')('http')
+var mkdirp = require('mkdirp');
 
 import StringBuilder = require('string-builder');
 
@@ -19,7 +20,10 @@ export default function (config, modules, additionalTypes) {
   }
 
   if (!fs.existsSync(config.outDir)){
-    fs.mkdirSync(config.outDir);
+    mkdirp(config.outDir, function (err) {
+      if (err) console.error(err)
+      else console.log('dir created')
+    });
   }
 
   for (let moduleName in moduleContents) {
