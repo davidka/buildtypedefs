@@ -1,6 +1,6 @@
 {
   "name": "buildtypedefs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "This is a utility that transforms code documented with getdocs-style doc comments into TypeScript definition files",
   "main": "out/src/build.js",
   "scripts": {
