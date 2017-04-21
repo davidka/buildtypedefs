@@ -28,12 +28,16 @@
     "sinon": "^1.17.7",
     "string-builder": "^0.1.4"
   },
+  "files": [
+    "out/src"
+  ],
+  "types": "out/src/build.d.ts",
   "devDependencies": {
     "@types/mocha": "^2.2.39",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "^0.0.29",
     "@types/sinon": "^1.16.35",
-	"@types/debug": "0.0.29",
+	  "@types/debug": "0.0.29",
     "@types/node": "^7.0.5",
     "mocha": "^3.2.0",
     "chai": "^3.5.0",
