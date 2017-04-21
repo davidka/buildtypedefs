@@ -18,6 +18,10 @@ export default function (config, modules, additionalTypes) {
     });
   }
 
+  if (!fs.existsSync(config.outDir)){
+    fs.mkdirSync(config.outDir);
+  }
+
   for (let moduleName in moduleContents) {
     let imports = importsFor(moduleName, modules, moduleContents, additionalTypes);
     let sb = moduleDef(moduleContents[moduleName], moduleName, imports, additionalTypes);
