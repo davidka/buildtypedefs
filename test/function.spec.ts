@@ -1,5 +1,5 @@
 import StringBuilder = require('string-builder');
-import functionDef from "../src/templates/function";
+import {functionDef} from "../src/gentype";
 import {FunctionType, Parameter} from "../src/types";
 
 let sb;

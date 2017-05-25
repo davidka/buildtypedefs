@@ -1,6 +1,5 @@
 import StringBuilder = require('string-builder');
-import typeDef from "./type";
-import functionDef from "./function";
+import {typeDef, functionDef} from "../gentype";
 import miscDef from "./misc";
 
 export default function (sb: StringBuilder, item: any, name: string, isStatic: boolean, isInlineProp: boolean, items: Object, 

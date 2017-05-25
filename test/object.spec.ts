@@ -1,5 +1,5 @@
 import StringBuilder = require('string-builder');
-import objectDef from "../src/templates/object";
+import {objectDef} from "../src/gentype";
 import {ObjectType, Parameter} from "../src/types";
 
 let sb;

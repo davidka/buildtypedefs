@@ -1,5 +1,5 @@
 import StringBuilder = require('string-builder');
-import typeDef from "../src/templates/type";
+import {typeDef} from "../src/gentype";
 import { FunctionType, OtherType } from "../src/types";
 
 
