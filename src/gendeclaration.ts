@@ -1,15 +1,22 @@
 import StringBuilder = require('string-builder');
-import {typeDef, functionParamsDef, functionDef} from "./gentype";
+import {FunctionType} from "./types";
+import {typeDef, functionParamsDef, functionReturnDef, functionDef} from "./gentype";
+
+function functionDeclarationDef(sb: StringBuilder, item: FunctionType, items: Object, imports: string[], additionalTypes: Object) {
+  functionParamsDef(sb, item.params, items, imports, additionalTypes);
+  sb.append(": ")
+  functionReturnDef(sb, item, items, imports, additionalTypes);
+}
 
 export function miscDef(sb: StringBuilder, item: any, name: string, isStatic: boolean, isInlineProp: boolean, items: Object, 
-  imports: Array<string>, additionalTypes: Object, processItemProperties: boolean = true) {
+  imports: string[], additionalTypes: Object, processItemProperties: boolean = true) {
   item.name = name;
 
   if (isStatic) {
     sb.append("static ")
   }
 
-  if(item.type == "Function") {   
+  if(item.type == "Function") {
     const isConstructor = /\.constructor$/.test(item.id);
     if (isConstructor) {
       sb.append("constructor")
@@ -17,13 +24,13 @@ export function miscDef(sb: StringBuilder, item: any, name: string, isStatic: bo
     } else {
       if(!isInlineProp) sb.append("function ")
       sb.append(item.name)
-      functionDef(sb, item, items, imports, false, additionalTypes);
+      functionDeclarationDef(sb, item, items, imports, additionalTypes);
     }
   }
   else {
     if(!isInlineProp) sb.append("let ")
     sb.append(name + ": ")
-    if (item.type) typeDef(sb, item, false, items, imports, additionalTypes);
+    if (item.type) typeDef(sb, item, items, imports, additionalTypes);
     sb.append(";")
   }
 
@@ -47,14 +54,14 @@ export function classDef(sb: StringBuilder, item: any, name: string, items: Obje
         sb.append(", ")
       }
 
-      typeDef(sb, item.typeParams[i], true, items, imports, additionalTypes);
+      typeDef(sb, item.typeParams[i], items, imports, additionalTypes);
     }
     sb.append("> ")
   }
 
   if(item.extends) {
     sb.append(" extends ")
-    typeDef(sb, item.extends, false, items, imports, additionalTypes);
+    typeDef(sb, item.extends, items, imports, additionalTypes);
   }
 
   sb.append("{ ")
