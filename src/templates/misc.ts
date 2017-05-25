@@ -12,19 +12,20 @@ export default function (sb: StringBuilder, item: any, name: string, isStatic: b
   }
 
   if(item.type == "Function") {   
-
-    if (/\.constructor$/.test(item.id)) {
-      item.name = "constructor";
-    } else if(!isInlineProp) {
-      sb.append("function ")
+    const isConstructor = /\.constructor$/.test(item.id);
+    if (isConstructor) {
+      sb.append("constructor")
+    } else {
+      if(!isInlineProp) sb.append("function ")
+      sb.append(item.name)
     }
-    functionDef(sb, item, items, imports, false, additionalTypes);
+    functionDef(sb, item, items, imports, false, isConstructor, additionalTypes);
     
   }
   else {
     if(!isInlineProp) sb.append("let ")
-    sb.append(name)
-    if (item.type) typeDef(sb, item, false, false, false, items, imports, additionalTypes);
+    sb.append(name + ": ")
+    if (item.type) typeDef(sb, item, false, items, imports, additionalTypes);
     sb.append(";")
   }
 

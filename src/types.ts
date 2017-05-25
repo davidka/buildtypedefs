@@ -1,7 +1,5 @@
 export interface BaseType {
-  id: string,
-  optional?: boolean,
-  isReturn?: boolean /* TODO: get rid of this */
+  id: string
 }
 
 export interface FunctionType extends BaseType {
@@ -17,7 +15,7 @@ export interface ArrayType extends BaseType {
 
 export interface ObjectType extends BaseType {
   type: "Object",
-  properties: { [propertyName: string]: Type }
+  properties: { [propertyName: string]: Property }
 }
 
 export interface OtherType extends BaseType {
@@ -29,10 +27,13 @@ export type Type = FunctionType | ArrayType | ObjectType | OtherType
 
 export interface ParameterArgs {
   rest?: boolean,
-  name?: string
+  name?: string,
+  optional?: boolean
 }
 
 export type Parameter = Type & ParameterArgs
+
+export type Property = Type & { optional?: boolean }
 
 export function isFunction(t: Type): t is FunctionType {
   return t.type == "Function";

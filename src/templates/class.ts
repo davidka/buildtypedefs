@@ -12,14 +12,14 @@ export default function (sb: StringBuilder, item: any, name: string, items: Obje
         sb.append(", ")
       }
 
-      typeDef(sb, item.typeParams[i], false, true, true, items, imports, additionalTypes);
+      typeDef(sb, item.typeParams[i], true, items, imports, additionalTypes);
     }
     sb.append("> ")
   }
 
   if(item.extends) {
     sb.append(" extends ")
-    typeDef(sb, item.extends, false, true, false, items, imports, additionalTypes);
+    typeDef(sb, item.extends, false, items, imports, additionalTypes);
   }
 
   sb.append("{ ")
