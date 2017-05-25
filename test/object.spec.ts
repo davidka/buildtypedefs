@@ -10,7 +10,7 @@ beforeEach(function () {
 
 describe('should add object definition', () => {
   it('with one property', () => {
-    const item: ObjectType = { type: "Object", id: "o", properties: { prop1: { type: "string", id: "o.prop1" } } };
+    const item: ObjectType = { type: "Object", properties: { prop1: { type: "string" } } };
     objectDef(sb, item, {}, [], {});
     sb.toString().should.equal("{prop1: string}")
   });
@@ -18,11 +18,7 @@ describe('should add object definition', () => {
   it('with two properties', () => {
     const item: ObjectType = {
       type: "Object",
-      id: "o",
-      properties: {
-        prop1: { type: "string", id: "o.prop1" },
-        prop2: { type: "Object", id: "o.prop2" }
-      }
+      properties: { prop1: { type: "string" }, prop2: { type: "Object" } }
     };
     objectDef(sb, item, {}, [], {});
     sb.toString().should.equal("{prop1: string, prop2: Object}")

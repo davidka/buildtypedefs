@@ -13,7 +13,7 @@ beforeEach(function () {
 describe('when adding type definition', () => {
 
   it('should handle a function', () => {
-    const item: FunctionType & { name: string } = { name: "Type1", id: "Type1", type: "Function", params: [] };
+    const item: FunctionType = { type: "Function", params: [] };
     typeDef(sb, item, {}, [], {});
     sb.toString().should.equal("() => void")
   });

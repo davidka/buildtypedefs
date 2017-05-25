@@ -1,24 +1,20 @@
-export interface BaseType {
-  id: string
-}
-
-export interface FunctionType extends BaseType {
+export interface FunctionType {
   type: "Function",
   params: Parameter[],
   returns?: Type
 }
 
-export interface ArrayType extends BaseType {
+export interface ArrayType {
   type: "Array",
   typeParams: [Type]
 }
 
-export interface ObjectType extends BaseType {
+export interface ObjectType {
   type: "Object",
   properties: { [propertyName: string]: Property }
 }
 
-export interface OtherType extends BaseType {
+export interface OtherType {
   type: string,
   typeParams?: Type[]
 }
