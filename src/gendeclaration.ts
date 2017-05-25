@@ -1,5 +1,5 @@
 import StringBuilder = require('string-builder');
-import {FunctionType} from "./types";
+import {FunctionType, Type, isFunction, isObject, Declaration, ClassOrInterfaceDeclaration, isClassOrInterfaceDeclaration} from "./types";
 import {typeDef, functionParamsDef, functionReturnDef, functionDef} from "./gentype";
 
 function functionDeclarationDef(sb: StringBuilder, item: FunctionType, items: Object, imports: string[], additionalTypes: Object) {
@@ -8,78 +8,74 @@ function functionDeclarationDef(sb: StringBuilder, item: FunctionType, items: Ob
   functionReturnDef(sb, item, items, imports, additionalTypes);
 }
 
-export function miscDef(sb: StringBuilder, item: any, name: string, isStatic: boolean, isInlineProp: boolean, items: Object, 
+export function miscDef(sb: StringBuilder, type: Type, name: string, isInlineProp: boolean, items: Object, 
   imports: string[], additionalTypes: Object, processItemProperties: boolean = true) {
-  item.name = name;
 
-  if (isStatic) {
-    sb.append("static ")
-  }
-
-  if(item.type == "Function") {
-    const isConstructor = /\.constructor$/.test(item.id);
+  if (isFunction(type)) {
+    const isConstructor = typeof type.id == "string" && /\.constructor$/.test(type.id);
     if (isConstructor) {
       sb.append("constructor")
-      functionParamsDef(sb, item.params, items, imports, additionalTypes);
+      functionParamsDef(sb, type.params, items, imports, additionalTypes);
     } else {
       if(!isInlineProp) sb.append("function ")
-      sb.append(item.name)
-      functionDeclarationDef(sb, item, items, imports, additionalTypes);
+      sb.append(name)
+      functionDeclarationDef(sb, type, items, imports, additionalTypes);
     }
   }
   else {
     if(!isInlineProp) sb.append("let ")
     sb.append(name + ": ")
-    if (item.type) typeDef(sb, item, items, imports, additionalTypes);
+    if (type.type) typeDef(sb, type, items, imports, additionalTypes);
     sb.append(";")
   }
 
   sb.appendLine("");
 
-  if(processItemProperties) {
-    for (let prop in item.properties) {
-      miscDef(sb, item.properties[prop], prop, false, true, items, imports, additionalTypes)
+  if(isObject(type) && processItemProperties) {
+    for (let prop in type.properties) {
+      miscDef(sb, type.properties[prop], prop, true, items, imports, additionalTypes)
     }
   }
 
 }
 
-export function classDef(sb: StringBuilder, item: any, name: string, items: Object, imports: Array<string>, additionalTypes: Object) {
-  sb.append(item.type + " " + name + " ")
+export function classDef(sb: StringBuilder, decl: ClassOrInterfaceDeclaration, name: string, items: Object, imports: string[], additionalTypes: Object) {
+  sb.append(decl.type + " " + name + " ")
 
-  if (item.typeParams) {
+  if (decl.typeParams) {
     sb.append("<")
-    for(let i in item.typeParams) {
+    for(let i in decl.typeParams) {
       if (i != "0"){
         sb.append(", ")
       }
 
-      typeDef(sb, item.typeParams[i], items, imports, additionalTypes);
+      typeDef(sb, decl.typeParams[i], items, imports, additionalTypes);
     }
     sb.append("> ")
   }
 
-  if(item.extends) {
+  if(decl.extends) {
     sb.append(" extends ")
-    typeDef(sb, item.extends, items, imports, additionalTypes);
+    typeDef(sb, decl.extends, items, imports, additionalTypes);
   }
 
   sb.append("{ ")
   sb.appendLine("")
 
-  if ("constructor" in item && !(item.constructor instanceof Function)) {
-    miscDef(sb, item.constructor, name, false, false, items, imports, additionalTypes);
+  if ("constructor" in decl && !(decl.constructor instanceof Function)) {
+    miscDef(sb, decl.constructor, name, false, items, imports, additionalTypes);
   }
 
-  if (item.properties) {
-    for (let prop in item.properties) {
-      miscDef(sb, item.properties[prop], prop, false, true,  items, imports, additionalTypes);
+  if (decl.properties) {
+    for (let prop in decl.properties) {
+      miscDef(sb, decl.properties[prop], prop, true, items, imports, additionalTypes);
     }
   }
 
-  if (item.staticProperties) {
-    for (let prop in item.staticProperties) {
-      miscDef(sb, item.staticProperties[prop], prop, true, true,  items, imports, additionalTypes);
+  if (decl.staticProperties) {
+    for (let prop in decl.staticProperties) {
+      sb.append("static ")
+      miscDef(sb, decl.staticProperties[prop], prop, true, items, imports, additionalTypes);
     }
   }
 
@@ -87,16 +83,16 @@ export function classDef(sb: StringBuilder, item: any, name: string, items: Obje
   sb.appendLine("")
 }
 
-export function itemDef(sb: StringBuilder, item: any, name: string, items: Object, imports: Array<string>, additionalTypes: Object) {
+export function itemDef(sb: StringBuilder, decl: Declaration, name: string, items: Object, imports: string[], additionalTypes: Object) {
 
   if(additionalTypes[name]) {
     name = additionalTypes[name].replacement;
   }
 
-  if(item.type == "class" || item.type == "interface") {
-    classDef(sb, item, name, items, imports, additionalTypes)
+  if(isClassOrInterfaceDeclaration(decl)) {
+    classDef(sb, decl, name, items, imports, additionalTypes)
   } else {
-    miscDef(sb, item, name, false, false, items, imports, additionalTypes, false)
+    miscDef(sb, decl, name, false, items, imports, additionalTypes, false)
   }
 
 }
