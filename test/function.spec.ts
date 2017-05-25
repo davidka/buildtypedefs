@@ -1,9 +1,17 @@
 import StringBuilder = require('string-builder');
 import functionDef from "../src/templates/function";
-
+import {FunctionType, Parameter} from "../src/types";
 
 let sb;
 let cr = "\r\n";
+
+function mkFunction(name: string, params: Parameter[] = []): FunctionType & { name: string } {
+  return {
+    type: "Function",
+    id: name,
+    name, params
+  };
+}
 
 beforeEach(function () {
   sb = new StringBuilder();
@@ -14,13 +22,13 @@ describe('should add function definition', () => {
   describe('with return type', () => {
 
     it('void', () => {
-      let item = {name: "Func"};
+      let item = mkFunction("Func");
       functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(): void")
     });
 
     it('=> void', () => {
-      let item = { name: "Func" };
+      let item = mkFunction("Func");
       functionDef(sb, item, {}, [], false, true);
       sb.toString().should.equal("Func(): void")
     });
@@ -30,49 +38,53 @@ describe('should add function definition', () => {
   describe('with parameters', () => {
 
     it('one named parameter', () => {
-      let item = { name: "Func", params: [{type: "bool", name: "param1"}] };
+      const item = mkFunction("Func", [{ type: "bool", name: "param1", id: "Func^f^param1" }])
       functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1: boolean): void")
     });
 
     it('one optional named parameter', () => {
-      let item = { name: "Func", params: [{ type: "bool", name: "param1", optional: true }] };
+      const item = mkFunction("Func", [{ type: "bool", name: "param1", id: "Func^f^param1", optional: true }])
       functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1?: boolean): void")
     });
 
     it('two named parameters', () => {
-      let item = { name: "Func", params: [{ type: "bool", name: "param1" }, { type: "Object", name: "param2" }] };
+      const item = mkFunction("Func", [{ type: "bool", name: "param1", id: "Func^f^param1" }, { type: "Object", name: "param2", id: "Func^f^param2" }])
       functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1: boolean, param2: Object): void")
     });
 
     it('two optional named parameters', () => {
-      let item = { name: "Func", params: [{ type: "bool", name: "param1", optional: true }, { type: "number", name: "param2", optional: true }] };
+      const item = mkFunction("Func", [{ type: "bool", name: "param1", id: "Func^f^param1", optional: true }, { type: "number", name: "param2", id: "Func^f^param2", optional: true }])
       functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1?: boolean, param2?: number): void")
     });
 
     it('rest parameter', () => {
-      let item = { name: "Func", params: [{ type: "bool", name: "param1", rest: true }] };
+      const item = mkFunction("Func", [{ type: "bool", name: "param1", id: "Func^f^param1", rest: true }]);
       functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(...param1: boolean): void")
     });
 
     it('array with function parameter', () => {
-      let item = { name: "Func", params: [{ type: "Array", name: "param1", typeParams: [{type: "Function", name: "Func1"}] }] };
+      const functionType: FunctionType = {type: "Function", id: "Func^f^param1^foo", params: []};
+      const param: Parameter = { type: "Array", name: "param1", id: "Func^f^param1", typeParams: [functionType] }
+      const item = mkFunction("Func", [param])
       functionDef(sb, item, {}, [], false, {});
-      sb.toString().should.equal("Func(param1: (Func1() => void)[]): void")
+      sb.toString().should.equal("Func(param1: (() => void)[]): void")
     });
 
     it('function parameter', () => {
-      let item = { name: "Func", params: [{ type: "Function", name: "param1" }] };
+      const param: FunctionType & Parameter = { type: "Function", params: [], name: "param1", id: "Func^f^param1" }
+      const item = mkFunction("Func", [param]);
       functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1: () => void): void")
     });
 
     it('optional function parameter', () => {
-      let item = { name: "Func", params: [{ type: "Function", name: "param1", optional: true }] };
+      const param: FunctionType & Parameter = { type: "Function", params: [], name: "param1", id: "Func^f^param1", optional: true }
+      const item = mkFunction("Func", [param]);
       functionDef(sb, item, {}, [], false, {});
       sb.toString().should.equal("Func(param1?: () => void): void")
     });

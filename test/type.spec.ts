@@ -1,5 +1,6 @@
 import StringBuilder = require('string-builder');
 import typeDef from "../src/templates/type";
+import { FunctionType, OtherType } from "../src/types";
 
 
 let sb;
@@ -12,92 +13,98 @@ beforeEach(function () {
 describe('when adding type definition', () => {
 
   it('should handle a function', () => {
-    let item = { name: "Type1", type: "Function" };
+    const item: FunctionType & { name: string } = { name: "Type1", id: "Type1", type: "Function", params: [] };
     typeDef(sb, item, false, false, false, {}, [], {});
     sb.toString().should.equal("Type1(): void")
   });
 
   it('should handle an array with one type param', () => {
-    let item = { type: "Array", typeParams: [{ type: "string"}] };
+    const item = { type: "Array", id: "a", typeParams: [{ type: "string", id: "a.s" }] };
     typeDef(sb, item, true, false, false, {}, [], {});
     sb.toString().should.equal(": string[]")
   });
 
   it('should handle an union with one type param', () => {
-    let item = { type: "union", typeParams: [{ type: "string" }] };
+    const item = { type: "union", id: "u", typeParams: [{ type: "string", id: "u.s" }] };
     typeDef(sb, item, false, true, false, {}, [], {});
     sb.toString().should.equal("string")
   });
 
   it('should handle an union with two type params', () => {
-    let item = { type: "union", typeParams: [{ type: "number" }, { type: "string" }] };
+    const item = { type: "union", id: "u", typeParams: [{ type: "number", id: "u.n" }, { type: "string", id: "u.s" }] };
     typeDef(sb, item, false, true, false, {}, [], {});
     sb.toString().should.equal("number | string")
   });
 
   it('should handle an union with one array type param', () => {
-    let item = { type: "union", typeParams: [{ type: "Array", typeParams: [{type: "Node"}] }] };
+    const item = { type: "union", id: "u", typeParams: [{ type: "Array", id: "u.a", typeParams: [{type: "Node", id: "u.a.n"}] }] };
     typeDef(sb, item, false, true, false, {}, [], {});
     sb.toString().should.equal("Node[]")
   });
 
   it('should handle an union with one number param and one function', () => {
-    let item = { type: "union", typeParams: [{ type: "number" }, { type: "Function", params: [{type: "string"}] }] };
+    const item = { type: "union", id: "u", typeParams: [{ type: "number", id: "u.n" }, { type: "Function", id: "u.f", params: [{type: "string", id: "u.f.s"}] }] };
     typeDef(sb, item, false, true, false, {}, [], {});
     sb.toString().should.equal("number | ((p: string) => void)")
   });
 
   it('should handle an union with one number param and one function with two params', () => {
-    let item = { type: "union", typeParams: [{ type: "number" }, { type: "Function", params: [{ type: "string" }, { type: "string" }] }] };
+    const item = { type: "union", id: "u", typeParams: [{ type: "number", id: "u.n" }, { type: "Function", id: "u.f", params: [{ type: "string", id: "u.f.s1" }, { type: "string", id: "u.f.s2" }] }] };
     typeDef(sb, item, false, true, false, {}, [], {});
     sb.toString().should.equal("number | ((p1: string, p2: string) => void)")
   });
 
   it('should handle an object', () => {
-    let item = { type: "Object"};
+    const item = { type: "Object", id: "o" };
     typeDef(sb, item, false, false, false, {}, [], {});
     sb.toString().should.equal(": Object")
   });
 
+  it('should handle the \'Object\' type', () => {
+    const item: OtherType = { type: "Object", id: "o" };
+    typeDef(sb, item, false, false, false,  {}, [], {});
+    sb.toString().should.equal(": Object")
+  });
+
   it('should handle other and add optional marker', () => {
-    let item = { type: "string", optional: true};
+    const item = { type: "string", id: "s", optional: true };
     typeDef(sb, item, false, false, false, {}, [], {});
     sb.toString().should.equal("?: string")
   });
 
   it('should handle other and add skip optional', () => {
-    let item = { type: "string", optional: true};
+    const item = { type: "string", id: "s", optional: true };
     typeDef(sb, item, true, false, false, {}, [], {});
     sb.toString().should.equal(": string")
   });
 
   it('should handle other and add skip colon', () => {
-    let item = { type: "string"};
+    const item = { type: "string", id: "s" };
     typeDef(sb, item, false, true, false, {}, [], {});
     sb.toString().should.equal("string")
   });
 
   it('should handle bool', () => {
-    let item = { type: "bool"};
+    let item = { type: "bool", id: "b" };
     typeDef(sb, item, false, false, false, {}, [], {});
     sb.toString().should.equal(": boolean")
   });
 
   it('should handle other with one type param', () => {
-    let item = { type: "MyType", typeParams: [{name: "typeParam1", type: "string"}]};
+    const item = { type: "MyType", id: "m", typeParams: [{name: "typeParam1", type: "string", id: "m.s"}]};
     typeDef(sb, item, false, false, false, {}, [], {});
     sb.toString().should.equal(": MyType<string>")
   });
 
   it('should handle other with two type params', () => {
-    let item = { type: "MyType", typeParams: [{ name: "typeParam1", type: "string" }, { name: "typeParam2", type: "number" }]};
+    const item = { type: "MyType", id: "m", typeParams: [{ name: "typeParam1", type: "string", id: "m.s" }, { name: "typeParam2", type: "number", id: "m.n" }]};
     typeDef(sb, item, false, false, false, {}, [], {});
     sb.toString().should.equal(": MyType<string, number>")
   });
 
   describe('when type is unknown', () => {
     it('should replace type', () => {
-      let item = { type: "MyType", typeParams: [{ name: "typeParam1", type: "string" }, { name: "typeParam2", type: "number" }] };
+      const item = { type: "MyType", id: "m", typeParams: [{ name: "typeParam1", type: "string", id: "s.m" }, { name: "typeParam2", type: "number", id: "m.n" }] };
       typeDef(sb, item, false, false, false, {}, [], {});
       sb.toString().should.equal(": MyType<string, number>")
     });

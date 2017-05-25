@@ -1,5 +1,6 @@
 import StringBuilder = require('string-builder');
 import objectDef from "../src/templates/object";
+import {ObjectType, Parameter} from "../src/types";
 
 let sb;
 
@@ -8,20 +9,21 @@ beforeEach(function () {
 });
 
 describe('should add object definition', () => {
-  it('without properties', () => {
-    let item = { };
-    objectDef(sb, item, false, {}, [], {});
-    sb.toString().should.equal(": Object")
-  });
-
   it('with one property', () => {
-    let item = { properties: { prop1: { type: "string" } } };
+    const item: ObjectType = { type: "Object", id: "o", properties: { prop1: { type: "string", id: "o.prop1" } } };
     objectDef(sb, item, false, {}, [], {});
     sb.toString().should.equal(": {prop1: string}")
   });
 
   it('with two properties', () => {
-    let item = { properties: { prop1: { type: "string" }, prop2: { type: "Object" }  } };
+    const item: ObjectType = {
+      type: "Object",
+      id: "o",
+      properties: {
+        prop1: { type: "string", id: "o.prop1" },
+        prop2: { type: "Object", id: "o.prop2" }
+      }
+    };
     objectDef(sb, item, false, {}, [], {});
     sb.toString().should.equal(": {prop1: string, prop2: Object}")
   });

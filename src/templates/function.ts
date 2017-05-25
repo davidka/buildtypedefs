@@ -1,8 +1,9 @@
 import StringBuilder = require('string-builder');
 import functionDef from "./function";
 import typeDef from "./type";
+import {FunctionType, isFunction} from "../types"
 
-export default function (sb: StringBuilder, item: any, items: Object, imports: Array<string>, isParam: boolean, additionalTypes: Object, useDummyName: boolean = true) {
+export default function (sb: StringBuilder, item: FunctionType & { name?: string }, items: Object, imports: Array<string>, isParam: boolean, additionalTypes: Object, useDummyName: boolean = true) {
   if(item.name) sb.append(item.name)
   else if(isParam && useDummyName) sb.append("fn")
 
@@ -19,7 +20,7 @@ export default function (sb: StringBuilder, item: any, items: Object, imports: A
       sb.append("...")
     }
 
-    if(param.type == "Function") {
+    if(isFunction(param)) {
       functionDef(sb, param, items, imports, true, additionalTypes);
     } else {
       if (param.name) sb.append(param.name)
