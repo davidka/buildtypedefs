@@ -1,10 +1,10 @@
-import StringBuilder = require('string-builder');
+import {GenEnv} from "./env"
 import {Type, FunctionType, ObjectType, Parameter} from "./types";
 import * as types from "./types";
 
 const knownTypes = ["string", "bool", "number", "any", "T"]
 
-export default function importDef(type: any, items: Object, imports: string[], additionalTypes: Object) {
+export default function importDef(type: string, {items, imports, additionalTypes}: GenEnv) {
   if (knownTypes.indexOf(type) == -1 && imports.indexOf(type) == - 1 && !items[type]) {
     if (additionalTypes[type]) {
       if(imports.indexOf(additionalTypes[type].replacement) == - 1){
@@ -15,111 +15,111 @@ export default function importDef(type: any, items: Object, imports: string[], a
   }
 }
 
-export function functionParamsDef(sb: StringBuilder, params: Parameter[], items: Object, imports: string[], additionalTypes: Object) {
-  sb.append("(")
+export function functionParamsDef(env: GenEnv, params: Parameter[]) {
+  env.append("(")
 
   let dummyNameCounter = 0;
   for(let i in params) {
     let param = params[i];
-    if(i != "0") sb.append(", ")
+    if(i != "0") env.append(", ")
     if(param.rest) {
-      sb.append("...")
+      env.append("...")
     }
 
-    if (param.name) sb.append(param.name)
+    if (param.name) env.append(param.name)
     else {
-      sb.append("p")
-      if(params.length > 1) sb.append((++dummyNameCounter).toString())
+      env.append("p")
+      if(params.length > 1) env.append((++dummyNameCounter).toString())
     }
-    if (param.optional) sb.append("?")
-    sb.append(": ")
-    typeDef(sb, param, items, imports, additionalTypes)
+    if (param.optional) env.append("?")
+    env.append(": ")
+    typeDef(env, param)
   }
 
-  sb.append(")")
+  env.append(")")
 }
 
-export function functionReturnDef(sb, item: FunctionType, items: Object, imports: string[], additionalTypes: Object) {
-  if(item.returns) {
-    typeDef(sb, item.returns, items, imports, additionalTypes)
+export function functionReturnDef(env: GenEnv, type: FunctionType) {
+  if(type.returns) {
+    typeDef(env, type.returns)
   } else {
-    sb.append("void")
+    env.append("void")
   }
 }
 
-export function functionDef(sb: StringBuilder, item: FunctionType, items: Object, imports: string[], additionalTypes: Object) {
-  functionParamsDef(sb, item.params, items, imports, additionalTypes);
-  sb.append(" => ")
-  functionReturnDef(sb, item, items, imports, additionalTypes);
+export function functionDef(env: GenEnv, item: FunctionType) {
+  functionParamsDef(env, item.params);
+  env.append(" => ")
+  functionReturnDef(env, item);
 }
 
-export function objectDef(sb: StringBuilder, item: ObjectType, items: Object, imports: string[], additionalTypes: Object) {
-  sb.append("{")
+export function objectDef(env: GenEnv, item: ObjectType) {
+  env.append("{")
   
   let first: boolean = true;
   for (let name in item.properties) {
     const prop = item.properties[name]
-    if (!first) sb.append(", ")
+    if (!first) env.append(", ")
     first = false;
-    sb.append(name)
-    if (prop.optional) sb.append("?")
-    sb.append(": ")
-    typeDef(sb, prop, items, imports, additionalTypes)
+    env.append(name)
+    if (prop.optional) env.append("?")
+    env.append(": ")
+    typeDef(env, prop)
   }
 
-  sb.append("}")
+  env.append("}")
 }
 
-export function typeDef(sb: StringBuilder, item: Type, items: Object, imports: string[], additionalTypes: Object) {
+export function typeDef(env: GenEnv, item: Type) {
 
   if (types.isFunction(item)) {
-    functionDef(sb, item, items, imports, additionalTypes)
+    functionDef(env, item)
   } else if (types.isArray(item)) {
     const elemType = item.typeParams[0];
     if (types.isFunction(elemType)) {
-      sb.append("(")
-      functionDef(sb, elemType, items, imports, additionalTypes);
-      sb.append(")")
+      env.append("(")
+      functionDef(env, elemType);
+      env.append(")")
     } else {
-      typeDef(sb, elemType, items, imports, additionalTypes)
+      typeDef(env, elemType)
     }
-    sb.append("[]");
+    env.append("[]");
   } else if (types.isObject(item)) {
-    objectDef(sb, item, items, imports, additionalTypes)
+    objectDef(env, item)
   } else if (item.type == "union") {
     const typeParams = item.typeParams || [];
     for (let i in typeParams) {
-      if (i != "0") sb.append(" | ")
+      if (i != "0") env.append(" | ")
       if (typeParams[i].type == "Function") {
-        sb.append("(")
-        typeDef(sb, typeParams[i], items, imports, additionalTypes)
-        sb.append(")")
+        env.append("(")
+        typeDef(env, typeParams[i])
+        env.append(")")
       } else {
-        typeDef(sb, typeParams[i], items, imports, additionalTypes)
+        typeDef(env, typeParams[i])
       }
 
     }
   } else {
-    importDef(item.type, items, imports, additionalTypes)
+    importDef(item.type, env)
 
     switch(item.type) {
       case "bool":
-        sb.append("boolean")
+        env.append("boolean")
         break
       default:
-        if (additionalTypes[item.type]) sb.append(additionalTypes[item.type].replacement)
-        else sb.append(item.type)
+        if (env.additionalTypes[item.type]) env.append(env.additionalTypes[item.type].replacement)
+        else env.append(item.type)
         
         break
     }
 
     if (item.typeParams) {
-      sb.append("<")
+      env.append("<")
       for (let i in item.typeParams) {
-        if (i != "0") sb.append(", ")
-        typeDef(sb, item.typeParams[i], items, imports, additionalTypes)
+        if (i != "0") env.append(", ")
+        typeDef(env, item.typeParams[i])
       }
-      sb.append(">")
+      env.append(">")
     }
   }
 }

@@ -1,21 +1,25 @@
 import StringBuilder = require('string-builder');
+import {Module} from "./types"
+import {GenEnv, AdditionalTypes} from "./env"
 import {itemDef} from "./gendeclaration";
 
-export default function (module: any, name: string, deps: Object, additionalTypes: Object): StringBuilder {
+export default function (module: Module, name: string, deps: Object, additionalTypes: AdditionalTypes): StringBuilder {
 
-  let sb = new StringBuilder("");
-  let imports = new Array<string>();
-  sb.appendLine("declare module \"" + name + "\" {");
-  sb.appendLine("");
+  const imports: string[] = [];
+  const items = module.items || {};
+  const env = new GenEnv(items, imports, additionalTypes, new StringBuilder(""));
 
-  for (let item in module.items) {
-    sb.append("export ")
-    itemDef(sb, module.items[item], item, module.items, imports, additionalTypes);
+  env.appendLine("declare module \"" + name + "\" {");
+  env.appendLine("");
+
+  for (let item in items) {
+    env.append("export ")
+    itemDef(env, items[item], item);
   }
 
-  sb.appendLine("}");
+  env.appendLine("}");
 
-  let importSb = new StringBuilder("");
+  const importSb = new StringBuilder("");
   for(let imp of imports) {
 
     if(additionalTypes[imp]) {
@@ -41,6 +45,6 @@ export default function (module: any, name: string, deps: Object, additionalType
   }
   importSb.appendLine("");
 
-  return new StringBuilder(importSb.toString() + sb.toString())
+  return new StringBuilder(importSb.toString() + env.sb.toString())
 
 }

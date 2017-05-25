@@ -61,3 +61,7 @@ export type Declaration = ClassOrInterfaceDeclaration | Type
 export function isClassOrInterfaceDeclaration(decl: Declaration): decl is ClassOrInterfaceDeclaration {
   return decl.type == "class" || decl.type == "interface"
 }
+
+export interface Module {
+  items?: { [name: string]: Declaration }
+}

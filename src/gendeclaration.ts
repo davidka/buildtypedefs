@@ -1,98 +1,97 @@
-import StringBuilder = require('string-builder');
+import {GenEnv} from "./env"
 import {FunctionType, Type, isFunction, isObject, Declaration, ClassOrInterfaceDeclaration, isClassOrInterfaceDeclaration} from "./types";
 import {typeDef, functionParamsDef, functionReturnDef, functionDef} from "./gentype";
 
-function functionDeclarationDef(sb: StringBuilder, item: FunctionType, items: Object, imports: string[], additionalTypes: Object) {
-  functionParamsDef(sb, item.params, items, imports, additionalTypes);
-  sb.append(": ")
-  functionReturnDef(sb, item, items, imports, additionalTypes);
+function functionDeclarationDef(env: GenEnv, item: FunctionType) {
+  functionParamsDef(env, item.params);
+  env.append(": ")
+  functionReturnDef(env, item);
 }
 
-export function miscDef(sb: StringBuilder, type: Type, name: string, isInlineProp: boolean, items: Object, 
-  imports: string[], additionalTypes: Object, processItemProperties: boolean = true) {
+export function miscDef(env: GenEnv, type: Type, name: string, isInlineProp: boolean, processItemProperties: boolean = true) {
 
   if (isFunction(type)) {
     const isConstructor = typeof type.id == "string" && /\.constructor$/.test(type.id);
     if (isConstructor) {
-      sb.append("constructor")
-      functionParamsDef(sb, type.params, items, imports, additionalTypes);
+      env.append("constructor")
+      functionParamsDef(env, type.params);
     } else {
-      if(!isInlineProp) sb.append("function ")
-      sb.append(name)
-      functionDeclarationDef(sb, type, items, imports, additionalTypes);
+      if(!isInlineProp) env.append("function ")
+      env.append(name)
+      functionDeclarationDef(env, type);
     }
   }
   else {
-    if(!isInlineProp) sb.append("let ")
-    sb.append(name + ": ")
-    if (type.type) typeDef(sb, type, items, imports, additionalTypes);
-    sb.append(";")
+    if(!isInlineProp) env.append("let ")
+    env.append(name + ": ")
+    if (type.type) typeDef(env, type);
+    env.append(";")
   }
 
-  sb.appendLine("");
+  env.appendLine("");
 
   if(isObject(type) && processItemProperties) {
     for (let prop in type.properties) {
-      miscDef(sb, type.properties[prop], prop, true, items, imports, additionalTypes)
+      miscDef(env, type.properties[prop], prop, true)
     }
   }
 
 }
 
-export function classDef(sb: StringBuilder, decl: ClassOrInterfaceDeclaration, name: string, items: Object, imports: string[], additionalTypes: Object) {
-  sb.append(decl.type + " " + name + " ")
+export function classDef(env: GenEnv, decl: ClassOrInterfaceDeclaration, name: string) {
+  env.append(decl.type + " " + name + " ")
 
   if (decl.typeParams) {
-    sb.append("<")
+    env.append("<")
     for(let i in decl.typeParams) {
       if (i != "0"){
-        sb.append(", ")
+        env.append(", ")
       }
 
-      typeDef(sb, decl.typeParams[i], items, imports, additionalTypes);
+      typeDef(env, decl.typeParams[i]);
     }
-    sb.append("> ")
+    env.append("> ")
   }
 
   if(decl.extends) {
-    sb.append(" extends ")
-    typeDef(sb, decl.extends, items, imports, additionalTypes);
+    env.append(" extends ")
+    typeDef(env, decl.extends);
   }
 
-  sb.append("{ ")
-  sb.appendLine("")
+  env.append("{ ")
+  env.appendLine("")
 
   if ("constructor" in decl && !(decl.constructor instanceof Function)) {
-    miscDef(sb, decl.constructor, name, false, items, imports, additionalTypes);
+    miscDef(env, decl.constructor, name, false);
   }
 
   if (decl.properties) {
     for (let prop in decl.properties) {
-      miscDef(sb, decl.properties[prop], prop, true, items, imports, additionalTypes);
+      miscDef(env, decl.properties[prop], prop, true);
     }
   }
 
   if (decl.staticProperties) {
     for (let prop in decl.staticProperties) {
-      sb.append("static ")
-      miscDef(sb, decl.staticProperties[prop], prop, true, items, imports, additionalTypes);
+      env.append("static ")
+      miscDef(env, decl.staticProperties[prop], prop, true);
     }
   }
 
-  sb.appendLine("}")
-  sb.appendLine("")
+  env.appendLine("}")
+  env.appendLine("")
 }
 
-export function itemDef(sb: StringBuilder, decl: Declaration, name: string, items: Object, imports: string[], additionalTypes: Object) {
+export function itemDef(env: GenEnv, decl: Declaration, name: string) {
 
-  if(additionalTypes[name]) {
-    name = additionalTypes[name].replacement;
+  if(env.additionalTypes[name]) {
+    name = env.additionalTypes[name].replacement;
   }
 
   if(isClassOrInterfaceDeclaration(decl)) {
-    classDef(sb, decl, name, items, imports, additionalTypes)
+    classDef(env, decl, name)
   } else {
-    miscDef(sb, decl, name, false, items, imports, additionalTypes, false)
+    miscDef(env, decl, name, false, false)
   }
 
 }
