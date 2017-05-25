@@ -1,5 +1,5 @@
 import StringBuilder = require('string-builder');
-import {typeDef, functionDef} from "./gentype";
+import {typeDef, functionParamsDef, functionDef} from "./gentype";
 
 export function miscDef(sb: StringBuilder, item: any, name: string, isStatic: boolean, isInlineProp: boolean, items: Object, 
   imports: Array<string>, additionalTypes: Object, processItemProperties: boolean = true) {
@@ -13,12 +13,12 @@ export function miscDef(sb: StringBuilder, item: any, name: string, isStatic: bo
     const isConstructor = /\.constructor$/.test(item.id);
     if (isConstructor) {
       sb.append("constructor")
+      functionParamsDef(sb, item.params, items, imports, additionalTypes);
     } else {
       if(!isInlineProp) sb.append("function ")
       sb.append(item.name)
+      functionDef(sb, item, items, imports, false, additionalTypes);
     }
-    functionDef(sb, item, items, imports, false, isConstructor, additionalTypes);
-    
   }
   else {
     if(!isInlineProp) sb.append("let ")

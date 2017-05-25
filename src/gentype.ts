@@ -39,7 +39,7 @@ export function functionParamsDef(sb: StringBuilder, params: Parameter[], items:
   sb.append(")")
 }
 
-export function functionDef(sb: StringBuilder, item: FunctionType, items: Object, imports: string[], isParam: boolean, isConstructor: boolean, additionalTypes: Object) {
+export function functionDef(sb: StringBuilder, item: FunctionType, items: Object, imports: string[], isParam: boolean, additionalTypes: Object) {
   functionParamsDef(sb, item.params, items, imports, additionalTypes);
 
   if(item.returns) {
@@ -50,7 +50,7 @@ export function functionDef(sb: StringBuilder, item: FunctionType, items: Object
       sb.append(": ")
       typeDef(sb, item.returns, false, items, imports, additionalTypes)
     }
-  } else if (!isConstructor) {
+  } else {
     if (isParam) sb.append(" => ")
     else sb.append(": ")
     sb.append("void")
@@ -79,12 +79,12 @@ export function typeDef(sb: StringBuilder, item: Type, isParam: boolean,
   items: Object, imports: Array<string>, additionalTypes: Object) {
 
   if (types.isFunction(item)) {
-    functionDef(sb, item, items, imports, isParam, false, additionalTypes)
+    functionDef(sb, item, items, imports, isParam, additionalTypes)
   } else if (types.isArray(item)) {
     const elemType = item.typeParams[0];
     if (types.isFunction(elemType)) {
       sb.append("(")
-      functionDef(sb, elemType, items, imports, true, false, additionalTypes);
+      functionDef(sb, elemType, items, imports, true, additionalTypes);
       sb.append(")")
     } else {
       typeDef(sb, elemType, false, items, imports, additionalTypes)
