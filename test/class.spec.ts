@@ -1,4 +1,4 @@
-import classDef from "../src/templates/class";
+import {classDef} from "../src/gendeclaration";
 import StringBuilder = require('string-builder');
 
 describe('class definition', () => {

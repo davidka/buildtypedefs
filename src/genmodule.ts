@@ -1,5 +1,5 @@
 import StringBuilder = require('string-builder');
-import itemDef from "./item";
+import {itemDef} from "./gendeclaration";
 
 export default function (module: any, name: string, deps: Object, additionalTypes: Object): StringBuilder {
 

@@ -1,5 +1,5 @@
 import StringBuilder = require('string-builder');
-import moduleDef from "../src/templates/module";
+import moduleDef from "../src/genmodule";
 
 
 let sb;

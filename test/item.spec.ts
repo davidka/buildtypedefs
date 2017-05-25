@@ -1,5 +1,5 @@
 import StringBuilder = require('string-builder');
-import itemDef from "../src/templates/item";
+import {itemDef} from "../src/gendeclaration";
 
 
 let sb;

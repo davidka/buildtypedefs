@@ -6,7 +6,7 @@ var mkdirp = require('mkdirp');
 import StringBuilder = require('string-builder');
 
 import {importsFor} from "./imports"
-import moduleDef from "./templates/module";
+import moduleDef from "./genmodule";
 
 export default function (config, modules, additionalTypes) {
 
