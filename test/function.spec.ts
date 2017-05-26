@@ -3,7 +3,6 @@ import {functionDef} from "../src/gentype";
 import {FunctionType, Parameter} from "../src/types";
 
 let env: GenEnv;
-let cr = "\r\n";
 
 function mkFunction(...params: Parameter[]): FunctionType {
   return { type: "Function", params };

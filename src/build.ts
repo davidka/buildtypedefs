@@ -1,17 +1,20 @@
 const fs = require("fs")
 const builddocs = require("builddocs")
-var debug = require('debug')('http')
-var mkdirp = require('mkdirp');
+const mkdirp = require('mkdirp');
 
-import StringBuilder = require('string-builder');
-
+import {ModuleContents} from "./types"
+import {AdditionalTypes} from "./env"
 import {importsFor} from "./imports"
 import moduleDef from "./genmodule";
 
-export default function (config, modules, additionalTypes) {
+export default function (
+  config: { baseDir: string, srcDir: string, outDir: string },
+  modules: { name: string }[],
+  additionalTypes: AdditionalTypes
+) {
 
   // let mold = loadTemplates(config, modules);
-  let moduleContents = Object.create(null)
+  let moduleContents: { [name: string]: ModuleContents } = Object.create(null)
 
   for (let module of modules) {
     moduleContents[module.name] = builddocs.read({
@@ -20,7 +23,7 @@ export default function (config, modules, additionalTypes) {
   }
 
   if (!fs.existsSync(config.outDir)){
-    mkdirp(config.outDir, function (err) {
+    mkdirp(config.outDir, function (err: Error) {
       if (err) console.error(err)
       else console.log('dir created')
     });

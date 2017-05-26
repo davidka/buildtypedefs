@@ -62,6 +62,7 @@ export function isClassOrInterfaceDeclaration(decl: Declaration): decl is ClassO
   return decl.type == "class" || decl.type == "interface"
 }
 
-export interface Module {
+export interface ModuleContents {
   items?: { [name: string]: Declaration }
+  all?: { [id: string]: Declaration }
 }

@@ -1,11 +1,13 @@
+import {AdditionalTypes} from "./env"
+import {Declaration, isClassOrInterfaceDeclaration, ModuleContents} from "./types"
 
-let addImport = function (name, imports, moduleContents, additionalTypes: Object) {
+let addImport = function (name: string, imports: { [name: string]: string[] }, moduleContents: ModuleContents, additionalTypes: AdditionalTypes) {
   if (!imports[name]) {
     imports[name] = []
     for (let propName in moduleContents[name].all) {
       let prop = moduleContents[name].all[propName];
 
-      if (prop.type == "class" ||  prop.type == "interface")  {
+      if (isClassOrInterfaceDeclaration(prop))  {
         if (additionalTypes[propName]) {
           imports[name].push(additionalTypes[propName].replacement);
         } else {
@@ -18,13 +20,14 @@ let addImport = function (name, imports, moduleContents, additionalTypes: Object
   }
 }
 
-export function importsFor(moduleName: string, modules: Array<any>, moduleContents: Object, additionalTypes: Object): Object {
+export function importsFor(moduleName: string, modules: { name: string, deps?: string[] }[], moduleContents: { [name: string]: ModuleContents }, additionalTypes: AdditionalTypes): Object {
 
   let mod = modules.find((module) => module.name == moduleName);
+  if (mod == undefined) { throw new Error("could not find module with name '"+moduleName+"'!"); }
   let imports = Object.create(null)
   let seen = Object.create(null)
 
-  function enter(name) {
+  function enter(name: string) {
     if (name in seen) return
     seen[name] = true
 

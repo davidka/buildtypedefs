@@ -1,6 +1,6 @@
 import {GenEnv, emptyEnv} from "../src/env"
 import {objectDef} from "../src/gentype";
-import {ObjectType, Parameter} from "../src/types";
+import {ObjectType} from "../src/types";
 
 let env: GenEnv;
 

@@ -1,8 +1,6 @@
-import StringBuilder = require('string-builder');
 import moduleDef from "../src/genmodule";
 
 
-let sb;
 let cr = "\r\n";
 
 describe('when adding module definition', () => {

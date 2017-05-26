@@ -1,10 +1,9 @@
 import {GenEnv, emptyEnv} from "../src/env"
 import {typeDef} from "../src/gentype";
-import { FunctionType, OtherType } from "../src/types";
+import { FunctionType } from "../src/types";
 
 
 let env: GenEnv;
-let cr = "\r\n";
 
 beforeEach(function () {
   env = emptyEnv();

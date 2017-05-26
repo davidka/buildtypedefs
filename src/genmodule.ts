@@ -1,9 +1,10 @@
-import StringBuilder = require('string-builder');
-import {Module} from "./types"
+import StringBuilder from 'string-builder';
+//import StringBuilder = require('string-builder');
+import {ModuleContents} from "./types"
 import {GenEnv, AdditionalTypes} from "./env"
 import {itemDef} from "./gendeclaration";
 
-export default function (module: Module, name: string, deps: Object, additionalTypes: AdditionalTypes): StringBuilder {
+export default function (module: ModuleContents, name: string, deps: Object, additionalTypes: AdditionalTypes): StringBuilder {
 
   const imports: string[] = [];
   const items = module.items || {};
@@ -35,7 +36,7 @@ export default function (module: Module, name: string, deps: Object, additionalT
     }
 
     if(!found) {
-      let result = (<any>Object).values(additionalTypes).filter((o) => o.replacement == imp);
+      let result = (<any>Object).values(additionalTypes).filter((o: {replacement:string}) => o.replacement == imp);
       if (result && result.length == 1 && result[0].source) {
         importSb.appendLine("import {" + result[0].replacement + "} from '" + result[0].source +  "'")
       } else{
