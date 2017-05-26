@@ -2,7 +2,7 @@ export interface FunctionType {
   type: "Function",
   id?: string
   params: Parameter[],
-  returns?: Type
+  returns?: ReturnType
 }
 
 export interface ArrayType {
@@ -29,6 +29,8 @@ export interface ParameterArgs {
 }
 
 export type Parameter = Type & ParameterArgs
+
+export type ReturnType = Type & { optional?: boolean }
 
 export type Property = Type & { optional?: boolean }
 

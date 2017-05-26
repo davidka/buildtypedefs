@@ -39,9 +39,14 @@ export function functionParamsDef(env: GenEnv, params: Parameter[]) {
   env.append(")")
 }
 
-export function functionReturnDef(env: GenEnv, type: FunctionType) {
-  if(type.returns) {
-    typeDef(env, type.returns)
+export function functionReturnDef(env: GenEnv, type: types.ReturnType | undefined) {
+  if(type) {
+    if (type.optional) {
+      typeDef(env, type, true)
+      env.append(" | null | undefined")
+    } else {
+      typeDef(env, type)
+    }
   } else {
     env.append("void")
   }
@@ -50,7 +55,7 @@ export function functionReturnDef(env: GenEnv, type: FunctionType) {
 export function functionDef(env: GenEnv, item: FunctionType) {
   functionParamsDef(env, item.params);
   env.append(" => ")
-  functionReturnDef(env, item);
+  functionReturnDef(env, item.returns);
 }
 
 export function objectDef(env: GenEnv, item: ObjectType) {

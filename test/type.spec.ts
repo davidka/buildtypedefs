@@ -1,6 +1,5 @@
 import {GenEnv, emptyEnv} from "../src/env"
 import {typeDef} from "../src/gentype";
-import { FunctionType } from "../src/types";
 
 
 let env: GenEnv;
@@ -12,7 +11,7 @@ beforeEach(function () {
 describe('when adding type definition', () => {
 
   it('should handle a function', () => {
-    const item: FunctionType = { type: "Function", params: [] };
+    const item = { type: "Function", params: [] };
     typeDef(env, item);
     env.sb.toString().should.equal("() => void")
   });

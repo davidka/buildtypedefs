@@ -5,7 +5,7 @@ import {typeDef, functionParamsDef, functionReturnDef} from "./gentype";
 function functionDeclarationDef(env: GenEnv, item: FunctionType) {
   functionParamsDef(env, item.params);
   env.append(": ")
-  functionReturnDef(env, item);
+  functionReturnDef(env, item.returns);
 }
 
 export function miscDef(env: GenEnv, type: Type, name: string, isInlineProp: boolean, processItemProperties: boolean = true) {

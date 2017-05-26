@@ -22,6 +22,18 @@ describe('should add function definition', () => {
       env.sb.toString().should.equal("() => void")
     });
 
+    it('should handle optional bool return type', () => {
+      const item: FunctionType = { type: "Function", params: [], returns: { type: "bool", optional: true } }
+      functionDef(env, item);
+      env.sb.toString().should.equal("() => boolean | null | undefined")
+    })
+
+    it('should handle optional function return type', () => {
+      const item: FunctionType = { type: "Function", params: [], returns: { type: "Function", params: [], optional: true } }
+      functionDef(env, item);
+      env.sb.toString().should.equal("() => (() => void) | null | undefined")
+    })
+
   });
 
   describe('with parameters', () => {
