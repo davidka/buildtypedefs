@@ -94,6 +94,11 @@ export function typeDef(env: GenEnv, item: Type, addParens: boolean = false) {
       }
       if (typeParams.length > 1 && addParens) env.append(")")
     }
+  } else if (item.type == "Object" && item.typeParams && item.typeParams.length == 1) {
+    const valueType = item.typeParams[0];
+    env.append("{ [name: string]: ")
+    typeDef(env, valueType)
+    env.append(" }")
   } else {
     importDef(item.type, env)
 

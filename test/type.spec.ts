@@ -71,6 +71,12 @@ describe('when adding type definition', () => {
     env.sb.toString().should.equal("Object")
   });
 
+  it('should handle objects with a known value type', () => {
+    const item = { type: "Object", typeParams: [{ type: "bool" }] }
+    typeDef(env, item)
+    env.sb.toString().should.equal("{ [name: string]: boolean }")
+  })
+
   it('should handle string', () => {
     let item = { type: "string" };
     typeDef(env, item);
