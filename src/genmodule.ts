@@ -1,4 +1,4 @@
-import StringBuilder from 'string-builder';
+import StringBuilder = require('string-builder');
 //import StringBuilder = require('string-builder');
 import {ModuleContents} from "./types"
 import {GenEnv, AdditionalTypes} from "./env"

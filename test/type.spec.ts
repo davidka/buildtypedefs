@@ -53,6 +53,12 @@ describe('when adding type definition', () => {
     env.sb.toString().should.equal("number | ((p1: string, p2: string) => void)")
   });
 
+  it('should handle an array of unions', () => {
+    const item = { type: "Array", typeParams: [{ type: "union", typeParams: [{ type: "number" }, { type: "bool" }] }] };
+    typeDef(env, item);
+    env.sb.toString().should.equal("(number | boolean)[]")
+  });
+
   it('should handle an object with unknown properties', () => {
     const item = { type: "Object", };
     typeDef(env, item);

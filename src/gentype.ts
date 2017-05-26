@@ -70,35 +70,26 @@ export function objectDef(env: GenEnv, item: ObjectType) {
   env.append("}")
 }
 
-export function typeDef(env: GenEnv, item: Type) {
+export function typeDef(env: GenEnv, item: Type, addParens: boolean = false) {
 
   if (types.isFunction(item)) {
+    if (addParens) env.append("(")
     functionDef(env, item)
+    if (addParens) env.append(")")
   } else if (types.isArray(item)) {
     const elemType = item.typeParams[0];
-    if (types.isFunction(elemType)) {
-      env.append("(")
-      functionDef(env, elemType);
-      env.append(")")
-    } else {
-      typeDef(env, elemType)
-    }
+    typeDef(env, elemType, true);
     env.append("[]");
   } else if (types.isObject(item)) {
     objectDef(env, item)
   } else if (item.type == "union") {
-    const typeParams = item.typeParams || [];
-    for (let i in typeParams) {
-      if (i != "0") env.append(" | ")
-      if (typeParams[i].type == "Function") {
-        env.append("(")
-        typeDef(env, typeParams[i])
-        env.append(")")
-      } else {
-        typeDef(env, typeParams[i])
-      }
-
+    const typeParams: Type[] = item.typeParams || [];
+    if (typeParams.length > 1 && addParens) env.append("(")
+    for (let i = 0; i < typeParams.length; i++) {
+      if (i > 0) env.append(" | ")
+      typeDef(env, typeParams[i], true)
     }
+    if (typeParams.length > 1 && addParens) env.append(")")
   } else {
     importDef(item.type, env)
 
@@ -115,8 +106,8 @@ export function typeDef(env: GenEnv, item: Type) {
 
     if (item.typeParams) {
       env.append("<")
-      for (let i in item.typeParams) {
-        if (i != "0") env.append(", ")
+      for (let i = 0; i < item.typeParams.length; i++) {
+        if (i > 0) env.append(", ")
         typeDef(env, item.typeParams[i])
       }
       env.append(">")
