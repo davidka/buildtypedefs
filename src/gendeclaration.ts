@@ -61,20 +61,22 @@ export function classDef(env: GenEnv, decl: ClassOrInterfaceDeclaration, name: s
   env.append("{ ")
   env.appendLine("")
 
+  const indented = env.indent();
+
   if ("constructor" in decl && !(decl.constructor instanceof Function)) {
-    miscDef(env, decl.constructor, name, false);
+    miscDef(indented, decl.constructor, name, false);
   }
 
   if (decl.properties) {
     for (let prop in decl.properties) {
-      miscDef(env, decl.properties[prop], prop, true);
+      miscDef(indented, decl.properties[prop], prop, true);
     }
   }
 
   if (decl.staticProperties) {
     for (let prop in decl.staticProperties) {
-      env.append("static ")
-      miscDef(env, decl.staticProperties[prop], prop, true);
+      indented.append("static ")
+      miscDef(indented, decl.staticProperties[prop], prop, true);
     }
   }
 
