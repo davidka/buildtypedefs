@@ -23,6 +23,12 @@ describe('when adding type definition', () => {
     env.sb.toString().should.equal("string[]")
   });
 
+  it('should handle an empty union', () => {
+    const item = { type: "union", typeParams: [] };
+    typeDef(env, item);
+    env.sb.toString().should.equal("never")
+  })
+
   it('should handle an union with one type param', () => {
     const item = { type: "union", typeParams: [{ type: "string" }] };
     typeDef(env, item);

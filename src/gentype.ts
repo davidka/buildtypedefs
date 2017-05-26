@@ -84,12 +84,16 @@ export function typeDef(env: GenEnv, item: Type, addParens: boolean = false) {
     objectDef(env, item)
   } else if (item.type == "union") {
     const typeParams: Type[] = item.typeParams || [];
-    if (typeParams.length > 1 && addParens) env.append("(")
-    for (let i = 0; i < typeParams.length; i++) {
-      if (i > 0) env.append(" | ")
-      typeDef(env, typeParams[i], true)
+    if (typeParams.length == 0) {
+      env.append("never")
+    } else {
+      if (typeParams.length > 1 && addParens) env.append("(")
+      for (let i = 0; i < typeParams.length; i++) {
+        if (i > 0) env.append(" | ")
+        typeDef(env, typeParams[i], true)
+      }
+      if (typeParams.length > 1 && addParens) env.append(")")
     }
-    if (typeParams.length > 1 && addParens) env.append(")")
   } else {
     importDef(item.type, env)
 
