@@ -13,9 +13,10 @@ export default function (module: ModuleContents, name: string, deps: Object, add
   env.appendLine("declare module \"" + name + "\" {");
   env.appendLine("");
 
+  let indented = env.indent()
   for (let item in items) {
-    env.append("export ")
-    itemDef(env, items[item], item);
+    indented.append("export ")
+    itemDef(indented, items[item], item);
   }
 
   env.appendLine("}");

@@ -20,7 +20,7 @@ export class GenEnv {
   }
 
   indent(): GenEnv {
-    return new GenEnv(this.items, this.imports, this.additionalTypes, this.sb, this.indentation + "  ")
+    return new GenEnv(this.items, this.imports, this.additionalTypes, this.sb, this.indentation + "  ", this.firstInLine)
   }
 
   append(str: string) {
@@ -31,8 +31,11 @@ export class GenEnv {
   }
 
   appendLine(str: string) {
-    if (this.firstInLine && str != "") this.sb.append(this.indentation)
-    this.sb.appendLine(str)
+    if (this.firstInLine && str != "") {
+      this.sb.appendLine(this.indentation + str)
+    } else {
+      this.sb.appendLine(str)
+    }
     this.firstInLine = true
   }
 } 
