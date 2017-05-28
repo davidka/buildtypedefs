@@ -13,12 +13,12 @@ describe('should add item definition', () => {
   it('should create a class', () => {
     let item = { name: "Plugin", type: "class" };
     itemDef(env, item, "Plugin");
-    env.sb.toString().should.equal('class Plugin { ' + cr + cr + "}" + cr)
+    env.sb.toString().should.equal('class Plugin {' + cr + cr + "}" + cr)
   });
   it('should create a interface', () => {
     let item = { name: "Plugin", type: "interface" };
     itemDef(env, item, "Plugin");
-    env.sb.toString().should.equal('interface Plugin { ' + cr + cr + "}" + cr)
+    env.sb.toString().should.equal('interface Plugin {' + cr + cr + "}" + cr)
   });
 
   it('should create a object', () => {

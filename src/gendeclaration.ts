@@ -58,7 +58,7 @@ export function classDef(env: GenEnv, decl: ClassOrInterfaceDeclaration, name: s
     typeDef(env, decl.extends);
   }
 
-  env.append("{ ")
+  env.append("{")
   env.appendLine("")
 
   const indented = env.indent();

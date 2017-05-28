@@ -14,7 +14,7 @@ describe('when adding module definition', () => {
   it('should create an module with one item', () => {
     let module = { items: {Class1: { type: "class"}} };
     let sb = moduleDef(module, "module1", {}, {});
-    sb.toString().should.equal(cr + cr + 'declare module "module1" {' + cr + 'export class Class1 { ' + cr + cr + '}' + cr + cr + '}')
+    sb.toString().should.equal(cr + cr + 'declare module "module1" {' + cr + 'export class Class1 {' + cr + cr + '}' + cr + cr + '}')
   });
 
   it('should replace additional type', () => {
