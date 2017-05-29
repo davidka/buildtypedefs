@@ -1,5 +1,5 @@
 import {GenEnv} from "./env"
-import {Type, FunctionType, ObjectType, Parameter} from "./types";
+import {Type, FunctionType, ObjectType, Parameter, OtherType} from "./types";
 import * as types from "./types";
 
 export function functionParamsDef(env: GenEnv, params: Parameter[]) {
@@ -46,7 +46,7 @@ export function functionDef(env: GenEnv, item: FunctionType) {
 }
 
 export function objectDef(env: GenEnv, item: ObjectType) {
-  env.append("{")
+  env.append("{ ")
   
   let first: boolean = true;
   for (let name in item.properties) {
@@ -59,11 +59,38 @@ export function objectDef(env: GenEnv, item: ObjectType) {
     typeDef(env, prop)
   }
 
-  env.append("}")
+  env.append(" }")
+}
+
+function unionDef(env: GenEnv, typeParams: Type[], addParens: boolean = false) {
+  if (typeParams.length == 0) {
+    env.append("never")
+  } else if (typeParams.length == 1) {
+    typeDef(env, typeParams[0], addParens)
+  } else {
+    if (addParens) env.append("(")
+    for (let i = 0; i < typeParams.length; i++) {
+      if (i > 0) env.append(" | ")
+      typeDef(env, typeParams[i], true)
+    }
+    if (addParens) env.append(")")
+  }
+}
+
+function otherDef(env: GenEnv, type: OtherType) {
+  env.append(env.resolveTypeName(type.type))
+
+  if (type.typeParams) {
+    env.append("<")
+    for (let i = 0; i < type.typeParams.length; i++) {
+      if (i > 0) env.append(", ")
+      typeDef(env, type.typeParams[i])
+    }
+    env.append(">")
+  }
 }
 
 export function typeDef(env: GenEnv, item: Type, addParens: boolean = false) {
-
   if (types.isFunction(item)) {
     if (addParens) env.append("(")
     functionDef(env, item)
@@ -75,34 +102,13 @@ export function typeDef(env: GenEnv, item: Type, addParens: boolean = false) {
   } else if (types.isObject(item)) {
     objectDef(env, item)
   } else if (item.type == "union") {
-    const typeParams: Type[] = item.typeParams || [];
-    if (typeParams.length == 0) {
-      env.append("never")
-    } else if (typeParams.length == 1) {
-      typeDef(env, typeParams[0], addParens)
-    } else {
-      if (addParens) env.append("(")
-      for (let i = 0; i < typeParams.length; i++) {
-        if (i > 0) env.append(" | ")
-        typeDef(env, typeParams[i], true)
-      }
-      if (addParens) env.append(")")
-    }
+    unionDef(env, item.typeParams || [], addParens)
   } else if (item.type == "Object" && item.typeParams && item.typeParams.length == 1) {
     const valueType = item.typeParams[0];
     env.append("{ [name: string]: ")
     typeDef(env, valueType)
     env.append(" }")
   } else {
-    env.append(env.resolveTypeName(item.type))
-
-    if (item.typeParams) {
-      env.append("<")
-      for (let i = 0; i < item.typeParams.length; i++) {
-        if (i > 0) env.append(", ")
-        typeDef(env, item.typeParams[i])
-      }
-      env.append(">")
-    }
+    otherDef(env, item)
   }
 }

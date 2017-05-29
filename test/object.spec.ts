@@ -12,7 +12,7 @@ describe('should add object definition', () => {
   it('with one property', () => {
     const item: ObjectType = { type: "Object", properties: { prop1: { type: "string" } } };
     objectDef(env, item);
-    env.sb.toString().should.equal("{prop1: string}")
+    env.sb.toString().should.equal("{ prop1: string }")
   });
 
   it('with two properties', () => {
@@ -21,6 +21,6 @@ describe('should add object definition', () => {
       properties: { prop1: { type: "string" }, prop2: { type: "Object" } }
     };
     objectDef(env, item);
-    env.sb.toString().should.equal("{prop1: string, prop2: Object}")
+    env.sb.toString().should.equal("{ prop1: string, prop2: Object }")
   });
 });
