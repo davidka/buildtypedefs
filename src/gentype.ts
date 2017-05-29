@@ -2,19 +2,6 @@ import {GenEnv} from "./env"
 import {Type, FunctionType, ObjectType, Parameter} from "./types";
 import * as types from "./types";
 
-const knownTypes = ["string", "bool", "number", "any", "T"]
-
-export default function importDef(type: string, {items, imports, additionalTypes}: GenEnv) {
-  if (knownTypes.indexOf(type) == -1 && imports.indexOf(type) == - 1 && !items[type]) {
-    if (additionalTypes[type]) {
-      if(imports.indexOf(additionalTypes[type].replacement) == - 1){
-        imports.push(additionalTypes[type].replacement); 
-      }
-    }
-    else imports.push(type);
-  }
-}
-
 export function functionParamsDef(env: GenEnv, params: Parameter[]) {
   env.append("(")
 
@@ -105,18 +92,7 @@ export function typeDef(env: GenEnv, item: Type, addParens: boolean = false) {
     typeDef(env, valueType)
     env.append(" }")
   } else {
-    importDef(item.type, env)
-
-    switch(item.type) {
-      case "bool":
-        env.append("boolean")
-        break
-      default:
-        if (env.additionalTypes[item.type]) env.append(env.additionalTypes[item.type].replacement)
-        else env.append(item.type)
-        
-        break
-    }
+    env.append(env.resolveTypeName(item.type))
 
     if (item.typeParams) {
       env.append("<")

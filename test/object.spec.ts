@@ -1,11 +1,11 @@
-import {GenEnv, emptyEnv} from "../src/env"
+import {GenEnv, emptyEnvForTests} from "../src/env"
 import {objectDef} from "../src/gentype";
 import {ObjectType} from "../src/types";
 
 let env: GenEnv;
 
 beforeEach(function () {
-  env = emptyEnv();
+  env = emptyEnvForTests();
 });
 
 describe('should add object definition', () => {

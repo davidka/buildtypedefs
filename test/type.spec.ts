@@ -1,11 +1,11 @@
-import {GenEnv, emptyEnv} from "../src/env"
+import {GenEnv, emptyEnvForTests} from "../src/env"
 import {typeDef} from "../src/gentype";
 
 
 let env: GenEnv;
 
 beforeEach(function () {
-  env = emptyEnv();
+  env = emptyEnvForTests();
 });
 
 describe('when adding type definition', () => {
@@ -87,6 +87,12 @@ describe('when adding type definition', () => {
     typeDef(env, item);
     env.sb.toString().should.equal("boolean")
   });
+
+  it('should handle string singleton types', () => {
+    const item = { type: '"foo"' };
+    typeDef(env, item);
+    env.sb.toString().should.equal('"foo"')
+  })
 
   it('should handle other with one type param', () => {
     const item = { type: "MyType", typeParams: [{name: "typeParam1", type: "string" }]};

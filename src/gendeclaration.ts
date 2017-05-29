@@ -52,8 +52,9 @@ export function classDef(env: GenEnv, decl: ClassOrInterfaceDeclaration, name: s
   }
 
   if(decl.extends) {
-    env.append(" extends ")
+    env.append("extends ")
     typeDef(env, decl.extends);
+    env.append(" ")
   }
 
   env.append("{")
@@ -84,15 +85,9 @@ export function classDef(env: GenEnv, decl: ClassOrInterfaceDeclaration, name: s
 }
 
 export function itemDef(env: GenEnv, decl: Declaration, name: string) {
-
-  if(env.additionalTypes[name]) {
-    name = env.additionalTypes[name].replacement;
-  }
-
   if(isClassOrInterfaceDeclaration(decl)) {
-    classDef(env, decl, name)
+    classDef(env, decl, env.resolveTypeName(name))
   } else {
     miscDef(env, decl, name, false, false)
   }
-
 }

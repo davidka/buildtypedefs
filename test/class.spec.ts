@@ -1,4 +1,4 @@
-import {GenEnv, emptyEnv} from "../src/env"
+import {GenEnv, emptyEnvForTests} from "../src/env"
 import {classDef} from "../src/gendeclaration";
 import {ClassOrInterfaceDeclaration} from "../src/types";
 
@@ -8,7 +8,7 @@ describe('class definition', () => {
   let cr = "\r\n";
 
   beforeEach(function () {
-    env = emptyEnv()
+    env = emptyEnvForTests()
   });
 
   it('should add class definition', () => {

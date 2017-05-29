@@ -1,4 +1,4 @@
-import {GenEnv, emptyEnv} from "../src/env"
+import {GenEnv, emptyEnvForTests} from "../src/env"
 import {functionDef} from "../src/gentype";
 import {FunctionType, Parameter} from "../src/types";
 
@@ -9,7 +9,7 @@ function mkFunction(...params: Parameter[]): FunctionType {
 }
 
 beforeEach(function () {
-  env = emptyEnv()
+  env = emptyEnvForTests()
 });
 
 describe('should add function definition', () => {

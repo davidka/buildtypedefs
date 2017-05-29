@@ -1,4 +1,4 @@
-import {GenEnv, emptyEnv} from "../src/env"
+import {GenEnv, emptyEnvForTests} from "../src/env"
 import {itemDef} from "../src/gendeclaration";
 
 
@@ -6,7 +6,7 @@ let env: GenEnv;
 let cr = "\r\n";
 
 beforeEach(function () {
-  env = emptyEnv();
+  env = emptyEnvForTests();
 });
 
 describe('should add item definition', () => {
