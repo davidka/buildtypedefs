@@ -78,13 +78,15 @@ export function typeDef(env: GenEnv, item: Type, addParens: boolean = false) {
     const typeParams: Type[] = item.typeParams || [];
     if (typeParams.length == 0) {
       env.append("never")
+    } else if (typeParams.length == 1) {
+      typeDef(env, typeParams[0], addParens)
     } else {
-      if (typeParams.length > 1 && addParens) env.append("(")
+      if (addParens) env.append("(")
       for (let i = 0; i < typeParams.length; i++) {
         if (i > 0) env.append(" | ")
         typeDef(env, typeParams[i], true)
       }
-      if (typeParams.length > 1 && addParens) env.append(")")
+      if (addParens) env.append(")")
     }
   } else if (item.type == "Object" && item.typeParams && item.typeParams.length == 1) {
     const valueType = item.typeParams[0];

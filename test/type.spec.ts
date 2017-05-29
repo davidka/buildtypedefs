@@ -28,31 +28,37 @@ describe('when adding type definition', () => {
     env.sb.toString().should.equal("never")
   })
 
-  it('should handle an union with one type param', () => {
+  it('should handle a union with one type param', () => {
     const item = { type: "union", typeParams: [{ type: "string" }] };
     typeDef(env, item);
     env.sb.toString().should.equal("string")
   });
 
-  it('should handle an union with two type params', () => {
+  it('should handle a union with one function type param', () => {
+    const item = { type: "union", typeParams: [{ type: "Function", params: [{type: "string"}] }] };
+    typeDef(env, item);
+    env.sb.toString().should.equal("(p: string) => void")
+  })
+
+  it('should handle a union with two type params', () => {
     const item = { type: "union", typeParams: [{ type: "number" }, { type: "string" }] };
     typeDef(env, item);
     env.sb.toString().should.equal("number | string")
   });
 
-  it('should handle an union with one array type param', () => {
+  it('should handle a union with one array type param', () => {
     const item = { type: "union", typeParams: [{ type: "Array", typeParams: [{type: "Node"}] }] };
     typeDef(env, item);
     env.sb.toString().should.equal("Node[]")
   });
 
-  it('should handle an union with one number param and one function', () => {
+  it('should handle a union with one number param and one function', () => {
     const item = { type: "union", typeParams: [{ type: "number" }, { type: "Function", params: [{type: "string"}] }] };
     typeDef(env, item);
     env.sb.toString().should.equal("number | ((p: string) => void)")
   });
 
-  it('should handle an union with one number param and one function with two params', () => {
+  it('should handle a union with one number param and one function with two params', () => {
     const item = { type: "union", typeParams: [{ type: "number" }, { type: "Function", params: [{ type: "string" }, { type: "string" }] }] };
     typeDef(env, item);
     env.sb.toString().should.equal("number | ((p1: string, p2: string) => void)")
