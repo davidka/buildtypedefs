@@ -59,9 +59,13 @@ export function objectDef(env: GenEnv, item: ObjectType) {
     if (!first) env.append(", ")
     first = false;
     env.append(name)
-    if (prop.optional) env.append("?")
-    env.append(": ")
-    typeDef(env, prop)
+    if (prop.optional) {
+      env.append("?: ")
+      typeDef(env, unionWith(prop, nullType))
+    } else {
+      env.append(": ")
+      typeDef(env, prop)
+    }
   }
 
   env.append(" }")

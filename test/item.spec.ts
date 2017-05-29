@@ -24,7 +24,7 @@ describe('should add item definition', () => {
   it('should create an object', () => {
     let item = { name: "PluginSpec", type: "Object", properties: { props: {type: "EditorProps", optional: true}} };
     itemDef(env, item, "PluginSpec");
-    env.sb.toString().should.equal("let PluginSpec: { props?: EditorProps };")
+    env.sb.toString().should.equal("let PluginSpec: { props?: EditorProps | null };")
   });
 
 });
