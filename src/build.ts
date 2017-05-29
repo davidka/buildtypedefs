@@ -1,15 +1,22 @@
 const fs = require("fs")
 const builddocs = require("builddocs")
 const mkdirp = require('mkdirp');
+const path = require('path')
 
 import {ModuleContents} from "./types"
 import {AdditionalTypes} from "./env"
 import {importsFor} from "./imports"
 import moduleDef from "./genmodule";
 
+function mkdirpIfNotExists(dir: string) {
+  if (!fs.existsSync(dir)) {
+    mkdirp.sync(dir)
+    console.log("created '" + dir + "'")
+  }
+}
+
 export default function (
-  config: { baseDir: string, srcDir: string, outDir: string },
-  modules: { name: string }[],
+  modules: { name: string, srcFiles: string, outFile: string }[],
   additionalTypes: AdditionalTypes
 ) {
 
@@ -17,23 +24,15 @@ export default function (
   let moduleContents: { [name: string]: ModuleContents } = Object.create(null)
 
   for (let module of modules) {
-    moduleContents[module.name] = builddocs.read({
-      files: config.baseDir + module.name + config.srcDir + "*.js"
-    });
+    moduleContents[module.name] = builddocs.read({ files: module.srcFiles });
   }
 
-  if (!fs.existsSync(config.outDir)){
-    mkdirp(config.outDir, function (err: Error) {
-      if (err) console.error(err)
-      else console.log('dir created')
-    });
-  }
-
-  for (let moduleName in moduleContents) {
-    let imports = importsFor(moduleName, modules, moduleContents, additionalTypes);
-    let sb = moduleDef(moduleContents[moduleName], moduleName, imports, additionalTypes);
-
-    fs.writeFileSync(config.outDir + moduleName + ".d.ts", sb.toString());
+  for (let module of modules) {
+    const mod = moduleContents[module.name]
+    let imports = importsFor(module.name, modules, moduleContents, additionalTypes);
+    let sb = moduleDef(mod, module.name, imports, additionalTypes);
+    mkdirpIfNotExists(path.dirname(module.outFile))
+    fs.writeFileSync(module.outFile, sb.toString());
   }
 
 }
