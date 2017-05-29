@@ -1,6 +1,6 @@
 import {GenEnv} from "./env"
 import {FunctionType, Type, isFunction, isObject, Declaration, ClassOrInterfaceDeclaration, isClassOrInterfaceDeclaration} from "./types";
-import {typeDef, functionParamsDef, functionReturnDef} from "./gentype";
+import { typeDef, functionParamsDef, functionReturnDef, unionWith, nullType } from "./gentype";
 
 function functionDeclarationDef(env: GenEnv, item: FunctionType) {
   functionParamsDef(env, item.params);
@@ -27,8 +27,7 @@ export function miscDef(env: GenEnv, type: Type & { optional?: boolean }, name: 
     if (type.type) {
       if (type.optional) {
         env.append("?: ")
-        typeDef(env, type, true)
-        env.append(" | null")
+        typeDef(env, unionWith(type, nullType))
       } else {
         env.append(": ")
         typeDef(env, type)

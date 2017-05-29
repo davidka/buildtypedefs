@@ -29,9 +29,9 @@ describe('should add function definition', () => {
     })
 
     it('should handle optional function return type', () => {
-      const item: FunctionType = { type: "Function", params: [], returns: { type: "Function", params: [], optional: true } }
+      const item: FunctionType = { type: "Function", params: [], returns: { type: "union", optional: true, typeParams: [{ type: "string" }, { type: "Function", params: [] }] } }
       functionDef(env, item);
-      env.sb.toString().should.equal("() => (() => void) | null | undefined")
+      env.sb.toString().should.equal("() => string | (() => void) | null | undefined")
     })
 
   });

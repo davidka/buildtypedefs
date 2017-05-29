@@ -26,14 +26,19 @@ export function functionParamsDef(env: GenEnv, params: Parameter[]) {
   env.append(")")
 }
 
+export function unionWith(t: Type, ...ts: Type[]): Type {
+  if (types.isOther(t) && t.type == "union") {
+    return { type: "union", typeParams: (t.typeParams || []).concat(ts) }
+  }
+  return { type: "union", typeParams: [t].concat(ts) }
+}
+
+export const undefinedType: Type = { type: "undefined" };
+export const nullType: Type = { type: "null" };
+
 export function functionReturnDef(env: GenEnv, type: types.ReturnType | undefined) {
   if(type) {
-    if (type.optional) {
-      typeDef(env, type, true)
-      env.append(" | null | undefined")
-    } else {
-      typeDef(env, type)
-    }
+    typeDef(env, type.optional ? unionWith(type, nullType, undefinedType) : type)
   } else {
     env.append("void")
   }

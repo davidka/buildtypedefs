@@ -12,6 +12,8 @@ export const baseTypes: TypeInfos = {
   any: {},
   Object: {},
   this: {},
+  null: {},
+  undefined: {},
   T: {} // TODO: handle type parameters dynamically!
 }
 
