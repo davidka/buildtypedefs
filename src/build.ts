@@ -16,7 +16,7 @@ function mkdirpIfNotExists(dir: string) {
 }
 
 export default function (
-  modules: { name: string, srcFiles: string, outFile: string }[],
+  modules: { name: string, srcFiles: string, outFile: string, header?: string }[],
   typeInfos: TypeInfos
 ) {
 
@@ -32,7 +32,7 @@ export default function (
     const mod = moduleContents[module.name]
     let sb = moduleDef(mod, module.name, typeInfos);
     mkdirpIfNotExists(path.dirname(module.outFile))
-    fs.writeFileSync(module.outFile, sb.toString());
+    fs.writeFileSync(module.outFile, (module.header || '') + sb.toString());
   }
 
 }
