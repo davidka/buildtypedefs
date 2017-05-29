@@ -35,6 +35,12 @@ describe('class definition', () => {
     env.sb.toString().should.equal("class Foo {" + cr + "  prop1: number;" + cr + "}")
   });
 
+  it('should add class definition with one optional let property', () => {
+    const item: ClassOrInterfaceDeclaration = { type: "class", properties: { prop1: { type: "number", optional: true } } };
+    classDef(env, item, "Foo");
+    env.sb.toString().should.equal("class Foo {" + cr + "  prop1?: number | null;" + cr + "}")
+  });
+
   it('should add class definition with one union property', () => {
     const item: ClassOrInterfaceDeclaration = { type: "class", properties: { prop2: { type: "union", typeParams: [{type: "Node"}, {type: "Node2"}] } } };
     classDef(env, item, "Class1");

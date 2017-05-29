@@ -8,7 +8,7 @@ function functionDeclarationDef(env: GenEnv, item: FunctionType) {
   functionReturnDef(env, item.returns);
 }
 
-export function miscDef(env: GenEnv, type: Type, name: string, isInlineProp: boolean, processItemProperties: boolean = true) {
+export function miscDef(env: GenEnv, type: Type & { optional?: boolean }, name: string, isInlineProp: boolean, processItemProperties: boolean = true) {
 
   if (isFunction(type)) {
     const isConstructor = typeof type.id == "string" && /\.constructor$/.test(type.id);
@@ -23,8 +23,17 @@ export function miscDef(env: GenEnv, type: Type, name: string, isInlineProp: boo
   }
   else {
     if(!isInlineProp) env.append("let ")
-    env.append(name + ": ")
-    if (type.type) typeDef(env, type);
+    env.append(name)
+    if (type.type) {
+      if (type.optional) {
+        env.append("?: ")
+        typeDef(env, type, true)
+        env.append(" | null")
+      } else {
+        env.append(": ")
+        typeDef(env, type)
+      }
+    }
     env.append(";")
   }
 
