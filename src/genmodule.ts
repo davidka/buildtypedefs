@@ -4,17 +4,17 @@ import {ModuleContents} from "./types"
 import {GenEnv, AdditionalTypes} from "./env"
 import {itemDef} from "./gendeclaration";
 
-export default function (module: ModuleContents, name: string, deps: Object, additionalTypes: AdditionalTypes): StringBuilder {
+export default function (module: ModuleContents, name: string, deps: { [name: string]: string[] }, additionalTypes: AdditionalTypes): StringBuilder {
 
   const imports: string[] = [];
   const items = module.items || {};
   const env = new GenEnv(items, imports, additionalTypes, new StringBuilder(""));
 
-  env.appendLine("declare module \"" + name + "\" {");
-  env.appendLine("");
+  env.append("declare module \"" + name + "\" {");
 
   let indented = env.indent()
   for (let item in items) {
+    indented.appendLine("");
     indented.append("export ")
     itemDef(indented, items[item], item);
   }
@@ -45,8 +45,9 @@ export default function (module: ModuleContents, name: string, deps: Object, add
       }
     }
   }
-  importSb.appendLine("");
+  let importStr = importSb.toString();
+  if (importStr != "") importStr += "\r\n"
 
-  return new StringBuilder(importSb.toString() + env.sb.toString())
+  return new StringBuilder(importStr + env.sb.toString())
 
 }

@@ -20,7 +20,12 @@ let addImport = function (name: string, imports: { [name: string]: string[] }, m
   }
 }
 
-export function importsFor(moduleName: string, modules: { name: string, deps?: string[] }[], moduleContents: { [name: string]: ModuleContents }, additionalTypes: AdditionalTypes): Object {
+export function importsFor(
+  moduleName: string,
+  modules: { name: string, deps?: string[] }[],
+  moduleContents: { [name: string]: ModuleContents },
+  additionalTypes: AdditionalTypes
+): { [name: string]: string[] } {
 
   let mod = modules.find((module) => module.name == moduleName);
   if (mod == undefined) { throw new Error("could not find module with name '"+moduleName+"'!"); }

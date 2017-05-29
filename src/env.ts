@@ -31,7 +31,7 @@ export class GenEnv {
   }
 
   appendLine(str: string) {
-    if (this.firstInLine && str != "") {
+    if (str != "") {
       this.sb.appendLine(this.indentation + str)
     } else {
       this.sb.appendLine(str)

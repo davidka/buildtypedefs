@@ -28,8 +28,6 @@ export function miscDef(env: GenEnv, type: Type, name: string, isInlineProp: boo
     env.append(";")
   }
 
-  env.appendLine("");
-
   if(isObject(type) && processItemProperties) {
     for (let prop in type.properties) {
       miscDef(env, type.properties[prop], prop, true)
@@ -59,29 +57,30 @@ export function classDef(env: GenEnv, decl: ClassOrInterfaceDeclaration, name: s
   }
 
   env.append("{")
-  env.appendLine("")
 
   const indented = env.indent();
 
   if ("constructor" in decl && !(decl.constructor instanceof Function)) {
+    indented.appendLine("")
     miscDef(indented, decl.constructor, name, false);
   }
 
   if (decl.properties) {
     for (let prop in decl.properties) {
+      indented.appendLine("")
       miscDef(indented, decl.properties[prop], prop, true);
     }
   }
 
   if (decl.staticProperties) {
     for (let prop in decl.staticProperties) {
+      indented.appendLine("")
       indented.append("static ")
       miscDef(indented, decl.staticProperties[prop], prop, true);
     }
   }
 
   env.appendLine("}")
-  env.appendLine("")
 }
 
 export function itemDef(env: GenEnv, decl: Declaration, name: string) {
