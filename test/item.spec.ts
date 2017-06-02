@@ -1,30 +1,30 @@
-import StringBuilder = require('string-builder');
-import itemDef from "../src/templates/item";
+import {GenEnv, emptyEnvForTests} from "../src/env"
+import {itemDef} from "../src/gendeclaration";
 
 
-let sb;
+let env: GenEnv;
 let cr = "\r\n";
 
 beforeEach(function () {
-  sb = new StringBuilder();
+  env = emptyEnvForTests();
 });
 
 describe('should add item definition', () => {
   it('should create a class', () => {
     let item = { name: "Plugin", type: "class" };
-    itemDef(sb, item, "Plugin", {}, [], {});
-    sb.toString().should.equal('class Plugin { ' + cr + cr + "}" + cr)
+    itemDef(env, item, "Plugin");
+    env.sb.toString().should.equal('class Plugin {' + cr + "}")
   });
   it('should create a interface', () => {
     let item = { name: "Plugin", type: "interface" };
-    itemDef(sb, item, "Plugin", {}, [], {});
-    sb.toString().should.equal('interface Plugin { ' + cr + cr + "}" + cr)
+    itemDef(env, item, "Plugin");
+    env.sb.toString().should.equal('interface Plugin {' + cr + "}")
   });
 
-  it('should create a object', () => {
+  it('should create an object', () => {
     let item = { name: "PluginSpec", type: "Object", properties: { props: {type: "EditorProps", optional: true}} };
-    itemDef(sb, item, "PluginSpec", {}, [], {});
-    sb.toString().should.equal("let PluginSpec: {props?: EditorProps};" + cr)
+    itemDef(env, item, "PluginSpec");
+    env.sb.toString().should.equal("let PluginSpec: { props?: EditorProps | null };")
   });
 
 });

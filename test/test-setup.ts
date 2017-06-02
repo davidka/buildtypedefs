@@ -5,7 +5,7 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinon from 'sinon';
 
-global.before(function () {
+before(function () {
   chai.should();
   chai.use(chaiAsPromised);
 });

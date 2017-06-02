@@ -1,36 +1,38 @@
 const fs = require("fs")
 const builddocs = require("builddocs")
-var debug = require('debug')('http')
-var mkdirp = require('mkdirp');
+const mkdirp = require('mkdirp');
+const path = require('path')
 
-import StringBuilder = require('string-builder');
+import {ModuleContents} from "./types"
+import {TypeInfos, baseTypes, mergeTypeInfos} from "./env"
+import {exportedTypeInfos} from "./exports"
+import moduleDef from "./genmodule";
 
-import {importsFor} from "./imports"
-import moduleDef from "./templates/module";
+function mkdirpIfNotExists(dir: string) {
+  if (!fs.existsSync(dir)) {
+    mkdirp.sync(dir)
+    console.log("created '" + dir + "'")
+  }
+}
 
-export default function (config, modules, additionalTypes) {
+export default function (
+  modules: { name: string, srcFiles: string, outFile: string, header?: string }[],
+  typeInfos: TypeInfos
+) {
 
-  // let mold = loadTemplates(config, modules);
-  let moduleContents = Object.create(null)
+  let moduleContents: { [name: string]: ModuleContents } = Object.create(null)
 
   for (let module of modules) {
-    moduleContents[module.name] = builddocs.read({
-      files: config.baseDir + module.name + config.srcDir + "*.js"
-    });
+    const mod = builddocs.read({ files: module.srcFiles })
+    typeInfos = mergeTypeInfos(exportedTypeInfos(module.name, mod), typeInfos)
+    moduleContents[module.name] = mod
   }
 
-  if (!fs.existsSync(config.outDir)){
-    mkdirp(config.outDir, function (err) {
-      if (err) console.error(err)
-      else console.log('dir created')
-    });
-  }
-
-  for (let moduleName in moduleContents) {
-    let imports = importsFor(moduleName, modules, moduleContents, additionalTypes);
-    let sb = moduleDef(moduleContents[moduleName], moduleName, imports, additionalTypes);
-
-    fs.writeFileSync(config.outDir + moduleName + ".d.ts", sb.toString());
+  for (let module of modules) {
+    const mod = moduleContents[module.name]
+    let sb = moduleDef(mod, module.name, typeInfos);
+    mkdirpIfNotExists(path.dirname(module.outFile))
+    fs.writeFileSync(module.outFile, (module.header || '') + sb.toString());
   }
 
 }
